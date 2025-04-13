@@ -1,0 +1,2 @@
+# TESTS
+This directory contains the test files for the project. The tests are organized into subdirectories based on the functionality they are testing. Each test file is named according to the functionality it tests, and the test cases are organized within each file.
