@@ -1,7 +1,7 @@
+import 'package:core/src/brigdes/core/core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:core/core.dart';
-import 'package:core/core_platform_interface.dart';
-import 'package:core/core_method_channel.dart';
+import 'package:core/src/brigdes/core/core_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockCorePlatform

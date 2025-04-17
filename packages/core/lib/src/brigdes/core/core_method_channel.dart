@@ -1,7 +1,7 @@
+import 'package:core/src/brigdes/core/core_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'core_platform_interface.dart';
 
 /// An implementation of [CorePlatform] that uses method channels.
 class MethodChannelCore extends CorePlatform {
