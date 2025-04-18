@@ -4,4 +4,6 @@
 final class MethodChannelConstants {
 
   static const String methodChannelEventBus = 'com.supperapp_sdk/event_bus';
+  static const String methodChannelMiniApp = 'com.supperapp_sdk/mini_app';
+
 }

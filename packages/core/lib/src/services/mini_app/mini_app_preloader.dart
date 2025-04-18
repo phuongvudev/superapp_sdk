@@ -30,7 +30,7 @@ class WebPreloader implements MiniAppPreloader {
   @override
   Future<void> preload(MiniAppManifest manifest) async {
     // Warm up webview, download assets, etc.
-    print("Preloading web mini app: ${manifest.id}");
+    print("Preloading web mini app: ${manifest.appId}");
     // Additional preloading logic can be added here.
   }
 }
@@ -42,7 +42,7 @@ class NativePreloader implements MiniAppPreloader {
   @override
   Future<void> preload(MiniAppManifest manifest) async {
     // Download native assets, etc.
-    print("Preloading native mini app: ${manifest.id}");
+    print("Preloading native mini app: ${manifest.appId}");
     // Additional preloading logic can be added here.
   }
 }
@@ -54,7 +54,7 @@ class FlutterWebPreloader implements MiniAppPreloader {
   @override
   Future<void> preload(MiniAppManifest manifest) async {
     // Warm up webview, download assets, etc.
-    print("Preloading Flutter web mini app: ${manifest.id}");
+    print("Preloading Flutter web mini app: ${manifest.appId}");
     // Additional preloading logic can be added here.
   }
 }
@@ -66,7 +66,7 @@ class ReactNativePreloader implements MiniAppPreloader {
   @override
   Future<void> preload(MiniAppManifest manifest) async {
     // Download native assets, etc.
-    print("Preloading native mini app: ${manifest.id}");
+    print("Preloading native mini app: ${manifest.appId}");
     // Additional preloading logic can be added here.
   }
 }

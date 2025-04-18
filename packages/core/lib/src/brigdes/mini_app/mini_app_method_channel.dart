@@ -1,6 +1,6 @@
 import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
+import 'package:core/src/constants/method_channel.dart';
 import 'package:core/src/models/mini_app_manifest.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// Implementation of `MiniAppPlatform` using method channels.
@@ -12,27 +12,31 @@ class MiniAppMethodChannel extends MiniAppPlatform {
   /// The method channel used for communication with the native platform.
   ///
   /// This channel is used to invoke methods on the native side and receive
-  /// responses. The channel name is `miniapp_bridge`.
-  @visibleForTesting
-  final methodChannel = const MethodChannel('miniapp_bridge');
+  /// responses.
+  final methodChannel =
+      const MethodChannel(MethodChannelConstants.methodChannelMiniApp);
 
   /// Launches a native mini app based on the provided manifest.
   ///
   /// [manifest] - The manifest containing metadata about the mini app.
-  /// Throws an `UnimplementedError` as this method is not yet implemented.
   @override
-  Future<void> launchNativeMiniApp(MiniAppManifest manifest) {
-    // TODO: Implement the logic to launch a native mini app.
-    throw UnimplementedError();
+  Future<void> launchNativeMiniApp(MiniAppManifest manifest) async {
+    try {
+      await methodChannel.invokeMethod('openMiniApp', manifest.toJson());
+    } on PlatformException catch (e) {
+      throw Exception('Failed to launch native mini app: ${e.message}');
+    }
   }
 
   /// Launches a web-based mini app based on the provided manifest.
   ///
   /// [manifest] - The manifest containing metadata about the mini app.
-  /// Throws an `UnimplementedError` as this method is not yet implemented.
   @override
-  Future<void> launchWebMiniApp(MiniAppManifest manifest) {
-    // TODO: Implement the logic to launch a web-based mini app.
-    throw UnimplementedError();
+  Future<void> launchWebMiniApp(MiniAppManifest manifest) async {
+    try {
+      await methodChannel.invokeMethod('openMiniApp', manifest.toJson());
+    } on PlatformException catch (e) {
+      throw Exception('Failed to launch web mini app: ${e.message}');
+    }
   }
 }

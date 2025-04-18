@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 @immutable
 class MiniAppManifest {
   /// Unique identifier for the mini app.
-  final String id;
+  final String appId;
 
   /// Display name of the mini app.
   final String name;
@@ -22,30 +22,35 @@ class MiniAppManifest {
   /// Optional name of the main component for the mini app.
   final String? mainComponent;
 
+  /// Optional parameters for the mini app.
+  final Map<String, dynamic>? params;
+
   /// Creates a new instance of `MiniAppManifest`.
   ///
-  /// [id] - The unique identifier for the mini app.
+  /// [appId] - The unique identifier for the mini app.
   /// [name] - The display name of the mini app.
   /// [framework] - The framework type used by the mini app.
   /// [entryPath] - The path to the entry point of the mini app.
   /// [mainComponent] - The optional name of the main component.
   const MiniAppManifest({
-    required this.id,
+    required this.appId,
     required this.name,
     required this.framework,
     required this.entryPath,
     this.mainComponent,
+    this.params,
   });
 
   /// Converts the `MiniAppManifest` instance to a JSON-compatible map.
   ///
   /// Returns a map containing the mini app's metadata.
   Map<String, dynamic> toJson() => {
-    'id': id,
+    'id': appId,
     'name': name,
     'framework': framework.name,
     'entryPath': entryPath,
     'mainComponent': mainComponent,
+    'params': params,
   };
 
   /// Creates a `MiniAppManifest` instance from a JSON-compatible map.
@@ -54,11 +59,14 @@ class MiniAppManifest {
   /// Returns a new `MiniAppManifest` instance.
   factory MiniAppManifest.fromJson(Map<String, dynamic> json) {
     return MiniAppManifest(
-      id: json['id'],
+      appId: json['id'],
       name: json['name'],
       framework: FrameworkTypeX.fromString(json['framework']),
       entryPath: json['entryPath'],
       mainComponent: json['mainComponent'],
+      params: json['params'] != null
+          ? Map<String, dynamic>.from(json['params'])
+          : null,
     );
   }
 }

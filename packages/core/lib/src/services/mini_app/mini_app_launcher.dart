@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
 import 'package:core/src/constants/framework_type.dart';
 import 'package:core/src/exception/mini_app_exception.dart';
+import 'package:core/src/logger/logger.dart';
 import 'package:core/src/models/mini_app_manifest.dart';
 import 'package:core/src/repository/mini_app_mainifest_repository.dart';
 import 'package:core/src/services/mini_app/mini_app_preloader.dart';
@@ -21,6 +22,7 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
   MiniAppLauncher._internal([MiniAppManifestRepository? registry]) {
     _registry =
         registry ?? FileMiniAppManifestRepository('path/to/mini_apps.json');
+    _logger = LogManager().getLogger(runtimeType.toString());
     _loadRegistry();
   }
 
@@ -31,6 +33,8 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
 
   /// Repository for managing mini app manifests
   late final MiniAppManifestRepository _registry;
+
+  late final Logger _logger;
 
   /// Constructor for initializing with a custom manifest repository
   MiniAppLauncher([MiniAppManifestRepository? registry]) {
@@ -73,16 +77,16 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
       }
     } on MiniAppNotFoundException catch (e) {
       // Handle case where the mini app is not found
-      print("Error loading mini app: $e");
+      _logger.error("Mini app not found: ${e.appId}", e);
       return Center(child: Text("Mini app not found: ${e.appId}"));
     } on UnsupportedFrameworkException catch (e) {
       // Handle case where the framework is unsupported
-      print("Error loading mini app: $e");
+      _logger.error("Unsupported mini app framework: ${e.framework}", e);
       return Center(
           child: Text("Unsupported mini app framework: ${e.framework}"));
-    } catch (e) {
+    } catch (e, stackTrace) {
       // Handle unexpected errors
-      print("Unexpected error loading mini app: $e");
+      _logger.error("Unexpected error loading mini app: $e", e, stackTrace);
       return const Center(child: Text("Unexpected error loading mini app"));
     }
   }
@@ -107,7 +111,7 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
 
   /// Registers a new mini app manifest
   Future<void> registerMiniApp(MiniAppManifest manifest) async {
-    _loadedRegistry[manifest.id] = manifest;
+    _loadedRegistry[manifest.appId] = manifest;
   }
 
   /// Unregisters a mini app by its ID
