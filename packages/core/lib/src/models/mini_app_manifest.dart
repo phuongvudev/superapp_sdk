@@ -1,14 +1,34 @@
 import 'package:core/src/constants/framework_type.dart';
 import 'package:flutter/foundation.dart';
 
+/// Represents the manifest of a mini app.
+///
+/// This class contains metadata about a mini app, such as its ID, name,
+/// framework type, entry path, and optional main component.
 @immutable
 class MiniAppManifest {
+  /// Unique identifier for the mini app.
   final String id;
+
+  /// Display name of the mini app.
   final String name;
+
+  /// Framework type used by the mini app (e.g., Flutter, React Native).
   final FrameworkType framework;
+
+  /// Path to the entry point of the mini app.
   final String entryPath;
+
+  /// Optional name of the main component for the mini app.
   final String? mainComponent;
 
+  /// Creates a new instance of `MiniAppManifest`.
+  ///
+  /// [id] - The unique identifier for the mini app.
+  /// [name] - The display name of the mini app.
+  /// [framework] - The framework type used by the mini app.
+  /// [entryPath] - The path to the entry point of the mini app.
+  /// [mainComponent] - The optional name of the main component.
   const MiniAppManifest({
     required this.id,
     required this.name,
@@ -17,14 +37,21 @@ class MiniAppManifest {
     this.mainComponent,
   });
 
+  /// Converts the `MiniAppManifest` instance to a JSON-compatible map.
+  ///
+  /// Returns a map containing the mini app's metadata.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'framework': framework.name,
-        'entryPath': entryPath,
-        'mainComponent': mainComponent,
-      };
+    'id': id,
+    'name': name,
+    'framework': framework.name,
+    'entryPath': entryPath,
+    'mainComponent': mainComponent,
+  };
 
+  /// Creates a `MiniAppManifest` instance from a JSON-compatible map.
+  ///
+  /// [json] - A map containing the mini app's metadata.
+  /// Returns a new `MiniAppManifest` instance.
   factory MiniAppManifest.fromJson(Map<String, dynamic> json) {
     return MiniAppManifest(
       id: json['id'],
