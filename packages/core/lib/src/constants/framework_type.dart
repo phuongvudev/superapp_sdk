@@ -14,6 +14,9 @@ enum FrameworkType {
   /// Represents a generic web-based mini app.
   web,
 
+  /// Represents a Flutter mini app.
+  flutter,
+
   /// Represents an unknown or unsupported framework type.
   unknown,
 }
@@ -36,6 +39,8 @@ extension FrameworkTypeX on FrameworkType {
         return 'native';
       case FrameworkType.web:
         return 'web';
+      case FrameworkType.flutter:
+        return 'flutter';
       default:
         return 'unknown';
     }
@@ -56,6 +61,8 @@ extension FrameworkTypeX on FrameworkType {
         return FrameworkType.native;
       case 'web':
         return FrameworkType.web;
+      case 'flutter':
+        return FrameworkType.flutter;
       default:
         return FrameworkType.unknown;
     }

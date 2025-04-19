@@ -25,6 +25,10 @@ class MiniAppManifest {
   /// Optional parameters for the mini app.
   final Map<String, dynamic>? params;
 
+  /// Optional deep links the mini app can handle.
+  final List<String>? deepLinks;
+
+
   /// Creates a new instance of `MiniAppManifest`.
   ///
   /// [appId] - The unique identifier for the mini app.
@@ -32,6 +36,7 @@ class MiniAppManifest {
   /// [framework] - The framework type used by the mini app.
   /// [entryPath] - The path to the entry point of the mini app.
   /// [mainComponent] - The optional name of the main component.
+  /// [deepLinks] - The optional list of deep links the mini app can handle.
   const MiniAppManifest({
     required this.appId,
     required this.name,
@@ -39,6 +44,7 @@ class MiniAppManifest {
     required this.entryPath,
     this.mainComponent,
     this.params,
+    this.deepLinks,
   });
 
   /// Converts the `MiniAppManifest` instance to a JSON-compatible map.
@@ -51,6 +57,7 @@ class MiniAppManifest {
     'entryPath': entryPath,
     'mainComponent': mainComponent,
     'params': params,
+    'deepLinks': deepLinks,
   };
 
   /// Creates a `MiniAppManifest` instance from a JSON-compatible map.
@@ -67,6 +74,28 @@ class MiniAppManifest {
       params: json['params'] != null
           ? Map<String, dynamic>.from(json['params'])
           : null,
+      deepLinks: json['deepLinks']
+    );
+  }
+
+  /// Creates a copy of the `MiniAppManifest` instance with optional modifications.
+  MiniAppManifest copyWith({
+    String? appId,
+    String? name,
+    FrameworkType? framework,
+    String? entryPath,
+    String? mainComponent,
+    Map<String, dynamic>? params,
+    List<String>? deepLinks,
+  }) {
+    return MiniAppManifest(
+      appId: appId ?? this.appId,
+      name: name ?? this.name,
+      framework: framework ?? this.framework,
+      entryPath: entryPath ?? this.entryPath,
+      mainComponent: mainComponent ?? this.mainComponent,
+      params: params ?? this.params,
+      deepLinks: deepLinks ?? this.deepLinks,
     );
   }
 }

@@ -70,3 +70,15 @@ class ReactNativePreloader implements MiniAppPreloader {
     // Additional preloading logic can be added here.
   }
 }
+
+/// Preloader implementation for Flutter native mini apps.
+///
+/// This class handles tasks such as downloading native assets.
+class FlutterNativePreloader implements MiniAppPreloader {
+  @override
+  Future<void> preload(MiniAppManifest manifest) async {
+    // Download native assets, etc.
+    print("Preloading Flutter native mini app: ${manifest.appId}");
+    // Additional preloading logic can be added here.
+  }
+}

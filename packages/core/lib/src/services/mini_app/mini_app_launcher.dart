@@ -2,30 +2,13 @@ import 'dart:async';
 import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
 import 'package:core/src/constants/framework_type.dart';
 import 'package:core/src/exception/mini_app_exception.dart';
-import 'package:core/src/logger/logger.dart';
+import 'package:core/src/logger/logger_mixin.dart';
 import 'package:core/src/models/mini_app_manifest.dart';
 import 'package:core/src/repository/mini_app_mainifest_repository.dart';
 import 'package:core/src/services/mini_app/mini_app_preloader.dart';
 import 'package:flutter/material.dart';
 
-class MiniAppLauncher implements MiniAppPreloaderRegistrar {
-  static MiniAppLauncher? _instance;
-
-  /// Singleton instance of `MiniAppLauncher`
-  static FutureOr<MiniAppLauncher> getInstance(
-      [MiniAppManifestRepository? registry]) {
-    _instance ??= MiniAppLauncher._internal(registry);
-    return _instance!;
-  }
-
-  /// Private constructor for initializing the launcher
-  MiniAppLauncher._internal([MiniAppManifestRepository? registry]) {
-    _registry =
-        registry ?? FileMiniAppManifestRepository('path/to/mini_apps.json');
-    _logger = LogManager().getLogger(runtimeType.toString());
-    _loadRegistry();
-  }
-
+class MiniAppLauncher with LoggerMixin implements MiniAppPreloaderRegistrar {
   late final Map<String, MiniAppManifest> _loadedRegistry;
 
   /// Platform-specific implementation for launching mini apps
@@ -34,21 +17,28 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
   /// Repository for managing mini app manifests
   late final MiniAppManifestRepository _registry;
 
-  late final Logger _logger;
+  /// Pre-loaders for different framework types
+  late final Map<FrameworkType, MiniAppPreloader> _preLoaders;
 
   /// Constructor for initializing with a custom manifest repository
-  MiniAppLauncher([MiniAppManifestRepository? registry]) {
+  /// [registry] - Optional custom repository for loading mini app manifests.
+  /// [preLoaders] - Optional map of pre-loaders for different frameworks.
+  /// If not provided, a default file-based repository is used. With the path is "assets/data/mini_app/mini_apps.json"
+  MiniAppLauncher(
+      {MiniAppManifestRepository? registry,
+      Map<FrameworkType, MiniAppPreloader>? preLoaders}) {
     _registry = registry ??
         FileMiniAppManifestRepository('assets/data/mini_app/mini_apps.json');
-  }
 
-  /// Preloaders for different framework types
-  final Map<FrameworkType, MiniAppPreloader> _preLoaders = {
-    FrameworkType.web: WebPreloader(),
-    FrameworkType.flutterWeb: WebPreloader(),
-    FrameworkType.native: NativePreloader(),
-    FrameworkType.reactNative: ReactNativePreloader(),
-  };
+    _preLoaders = preLoaders ??
+        {
+          FrameworkType.web: WebPreloader(),
+          FrameworkType.flutterWeb: WebPreloader(),
+          FrameworkType.native: NativePreloader(),
+          FrameworkType.reactNative: ReactNativePreloader(),
+          FrameworkType.flutter: FlutterNativePreloader(),
+        };
+  }
 
   /// Loads the mini app registry from the repository
   Future<void> _loadRegistry() async {
@@ -56,11 +46,14 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
   }
 
   /// Loads a mini app widget based on its ID
-  Future<Widget?> loadMiniAppWidget(String appId) async {
+  Future<Widget?> launch(String appId, {Map<String, dynamic>? params}) async {
     try {
-      final manifest = _loadedRegistry[appId];
+      var manifest = _loadedRegistry[appId];
       if (manifest == null) {
         return const Center(child: Text("Mini App not found"));
+      }
+      if (params != null) {
+        manifest = manifest.copyWith(params: params);
       }
       switch (manifest.framework) {
         case FrameworkType.flutterWeb:
@@ -77,16 +70,16 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
       }
     } on MiniAppNotFoundException catch (e) {
       // Handle case where the mini app is not found
-      _logger.error("Mini app not found: ${e.appId}", e);
+      logger.error("Mini app not found: ${e.appId}", e);
       return Center(child: Text("Mini app not found: ${e.appId}"));
     } on UnsupportedFrameworkException catch (e) {
       // Handle case where the framework is unsupported
-      _logger.error("Unsupported mini app framework: ${e.framework}", e);
+      logger.error("Unsupported mini app framework: ${e.framework}", e);
       return Center(
           child: Text("Unsupported mini app framework: ${e.framework}"));
     } catch (e, stackTrace) {
       // Handle unexpected errors
-      _logger.error("Unexpected error loading mini app: $e", e, stackTrace);
+      logger.error("Unexpected error loading mini app: $e", e, stackTrace);
       return const Center(child: Text("Unexpected error loading mini app"));
     }
   }
@@ -120,7 +113,7 @@ class MiniAppLauncher implements MiniAppPreloaderRegistrar {
   }
 
   /// Retrieves the list of registered mini apps
-  Future<List<MiniAppManifest>> get registeredMiniApps async {
+  List<MiniAppManifest> get registeredMiniApps {
     return _loadedRegistry.values.toList();
   }
 }
