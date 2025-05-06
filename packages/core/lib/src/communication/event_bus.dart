@@ -108,12 +108,6 @@ class EventBus {
       'type': event.type,
       'data': data,
     });
-
-    // Send the event to React Native specifically.
-    _platformMethodChannel.invokeMethod('dispatchReactNative', {
-      'type': event.type,
-      'data': data,
-    });
   }
 
   /// Returns a stream of events for listening.
