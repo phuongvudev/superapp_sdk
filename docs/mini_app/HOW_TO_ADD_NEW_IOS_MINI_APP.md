@@ -1,237 +1,296 @@
-# How to Add a Mini App to an Existing Application
+# How to Add an iOS Native Mini App to the Main Flutter Application
 
-This guide explains how to implement a mini app within your main application and how to launch it properly.
+This guide explains how to integrate an iOS native mini app into your Flutter application, covering everything from creating the mini app to launching it from Flutter.
 
-## Contents
-- [Introduction](#introduction)
-- [Setup](#setup)
-- [Creating a Mini App](#creating-a-mini-app)
-- [Registering a Mini App](#registering-a-mini-app)
-- [Launching a Mini App](#launching-a-mini-app)
-- [Complete Example](#complete-example)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
+## Creating the iOS Native Mini App
 
-## Introduction
+1. **Create a view controller for your mini app**:
 
-Mini apps are lightweight applications that run within a host (main) application. They provide:
-- Modular feature development
-- Dynamic updates without main app releases
-- Feature isolation and separation of concerns
+```swift
+// MiniAppViewController.swift
+import UIKit
 
-## Setup
-
-Initialize the SDK in your main application:
-
-```dart
-// Get reference to the SDK
-final sdk = SKit();
-
-// Initialize the SDK with configuration
-await sdk.initialize(
-  config: {'apiKey': 'your_api_key'},
-  optionalConfig: SDKOptionalConfig(
-    encryptor: AESEncryptor('your_encryption_key'),
-    miniAppRegistry: CustomMiniAppRepository(), // Optional
-    miniAppPreLoaders: {
-      FrameworkType.flutter: FlutterPreloader(),
-    },
-  ),
-);
+class MiniAppViewController: UIViewController {
+    
+    // Property to store parameters passed from Flutter
+    var params: [String: Any]?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .white
+        
+        // Create UI elements
+        let titleLabel = UILabel()
+        titleLabel.text = "iOS Native Mini App"
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let actionButton = UIButton(type: .system)
+        actionButton.setTitle("Complete Task", for: .normal)
+        actionButton.addTarget(self, action: #selector(completeTask), for: .touchUpInside)
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add views
+        view.addSubview(titleLabel)
+        view.addSubview(actionButton)
+        
+        // Set up constraints
+        NSLayoutConstraint.activate([
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            
+            actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            actionButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20)
+        ])
+        
+        // Handle parameters
+        if let params = params {
+            print("Received parameters: \(params)")
+        }
+    }
+    
+    @objc private func completeTask() {
+        // Return data to Flutter
+        let result: [String: Any] = [
+            "status": "success",
+            "data": ["message": "Task completed from iOS Native"]
+        ]
+        
+        // Use bridge to send result back to Flutter
+        MiniAppBridge.shared.finishWithResult(result)
+        
+        // Dismiss the view controller
+        dismiss(animated: true)
+    }
+}
 ```
 
-## Creating a Mini App
+## Setting Up the Communication Bridge
 
-Define your mini app using the `MiniAppManifest` class:
+1. **Create a bridge class**:
 
-```dart
-final miniAppManifest = MiniAppManifest(
-  appId: 'payment_mini_app',
-  name: 'Payment Service',
-  framework: FrameworkType.flutter, // Or other supported framework
-  entryPath: 'assets/mini_apps/payment',
-  mainComponent: 'PaymentFlow',
-  params: {'theme': 'light'},
-  deepLinks: ['myapp://payment/*'],
-);
+```swift
+// MiniAppBridge.swift
+import Foundation
+
+class MiniAppBridge {
+    static let shared = MiniAppBridge()
+    
+    private var resultCallback: ((Any?) -> Void)?
+    
+    private init() {}
+    
+    func setResultCallback(_ callback: @escaping (Any?) -> Void) {
+        self.resultCallback = callback
+    }
+    
+    func finishWithResult(_ result: Any?) {
+        resultCallback?(result)
+        resultCallback = nil
+    }
+}
 ```
 
-## Registering a Mini App
+2. **Update the MiniAppPlugin class** to handle native mini apps:
 
-Register your mini app with the SDK:
+```swift
+// MiniAppPlugin.swift
+import Flutter
+import UIKit
+
+public class MiniAppPlugin: NSObject, FlutterPlugin {
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: MethodChannelConstants.miniAppChannelName, binaryMessenger: registrar.messenger())
+        let instance = MiniAppPlugin()
+        registrar.addMethodCallDelegate(instance, channel: channel)
+    }
+
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case MethodChannelConstants.MiniAppMethods.openMiniApp:
+            guard let args = call.arguments as? [String: Any],
+                  let framework = args["framework"] as? String,
+                  let appId = args["appId"] as? String,
+                  let params = args["params"] as? [String: Any] else {
+                result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments provided", details: nil))
+                return
+            }
+
+            switch framework {
+            case FrameworkType.native:
+                openNativeMiniApp(appId: appId, params: params, result: result)
+            case FrameworkType.web:
+                openWebMiniApp(appId: appId, result: result)
+            default:
+                result(FlutterError(code: "INVALID_FRAMEWORK", message: "Unsupported framework: \(framework)", details: nil))
+            }
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+
+    private func openNativeMiniApp(appId: String, params: [String: Any], result: @escaping FlutterResult) {
+        // Find the class using the entry path
+        let entryPath = params["entryPath"] as? String ?? ""
+
+         guard let viewControllerClass = NSClassFromString(entryPath) as? UIViewController.Type else {
+            result(FlutterError(code: "CLASS_NOT_FOUND", message: "View controller class not found: \(appId) with \(entryPath)", details: nil))
+            return
+        }
+        
+        // Create an instance of the view controller
+        let viewController = viewControllerClass.init()
+        
+        // Pass parameters if the view controller can accept them
+        if let miniAppVC = viewController as? MiniAppViewController {
+            miniAppVC.params = params
+        }
+        
+        // Set up the result callback
+        MiniAppBridge.shared.setResultCallback(result)
+        
+        // Present the view controller
+        DispatchQueue.main.async {
+            UIApplication.shared.keyWindow?.rootViewController?.present(viewController, animated: true)
+        }
+    }
+
+    private func openWebMiniApp(appId: String, result: @escaping FlutterResult) {
+        if let url = URL(string: appId) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            result(nil)
+        } else {
+            result(FlutterError(code: "INVALID_URL", message: "Invalid URL: \(appId)", details: nil))
+        }
+    }
+}
+```
+
+## Registering the Mini App
+
+Register your iOS native mini app in your Flutter code:
 
 ```dart
 // Register the mini app
-await sdk.miniApp.registerMiniApp(miniAppManifest);
+await sdk.miniApp.registerMiniApp(
+  MiniAppManifest(
+    appId: 'payment_mini_app',
+    name: 'iOS Payment App',
+    framework: FrameworkType.native,
+    entryPath: 'MiniAppViewController', // Full class name including module if needed
+    params: {'theme': 'light'}, // Default parameters
+  ),
+);
 
-// For preloading (optional - improves launch performance)
+// Optionally preload the mini app
 await sdk.miniApp.preloadMiniApp('payment_mini_app');
 ```
 
-## Launching a Mini App
+## Launching the Mini App
 
-There are several ways to launch a mini app:
-
-### Direct Launch
+Launch the iOS native mini app from your Flutter code:
 
 ```dart
-final widget = await sdk.miniApp.launch('payment_mini_app');
-
-if (widget != null) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => widget),
-  );
-}
-```
-
-### With Parameters
-
-```dart
-final widget = await sdk.miniApp.launch(
-  'payment_mini_app',
-  params: {'amount': '100.00', 'currency': 'USD'}
-);
-```
-
-### Using Event Bus
-
-```dart
-// In the main app
-sdk.eventBus.dispatch(
-  Event('openMiniApp', {'appId': 'payment_mini_app'})
-);
-
-// Set up listener in your app initialization
-sdk.eventBus.on('openMiniApp', (data) {
-  final appId = data['appId'];
-  sdk.miniApp.launch(appId).then((widget) {
-    if (widget != null) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
-    }
-  });
-});
-```
-
-### Using Deep Links
-
-```dart
-// Configure deep link handling in your main app
-final uri = Uri.parse('myapp://payment/checkout?amount=99.99');
-sdk.deepLink.handleDeepLink(uri);
-```
-
-## Complete Example
-
-Here's a complete example showing how to integrate and launch a mini app:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:core/core.dart';
-
-class MainApp extends StatefulWidget {
-  @override
-  _MainAppState createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  final SKit sdk = SKit();
-  bool _initialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeSDK();
-  }
-
-  Future<void> _initializeSDK() async {
-    await sdk.initialize(
-      config: {'apiKey': 'your_api_key'},
-    );
-
-    // Register mini app
-    await sdk.miniApp.registerMiniApp(
-      MiniAppManifest(
-        appId: 'payment_mini_app',
-        name: 'Payment Service',
-        framework: FrameworkType.flutter,
-        entryPath: 'assets/mini_apps/payment',
-      ),
-    );
-
-    setState(() {
-      _initialized = true;
-    });
-  }
-
-  void _openPaymentMiniApp() async {
-    if (!_initialized) return;
-
-    final widget = await sdk.miniApp.launch(
+Future<void> launchIOSNativeMiniApp() async {
+  try {
+    final result = await sdk.miniApp.launch(
       'payment_mini_app',
-      params: {'amount': '100.00'}
+      params: {'userId': '12345', 'amount': '99.99'}
     );
-
-    if (widget != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => widget),
-      );
+    
+    if (result != null) {
+      print('Mini app returned data: $result');
+      // Process the returned data
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Main App')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: _openPaymentMiniApp,
-          child: Text('Open Payment Mini App'),
-        ),
-      ),
-    );
+  } catch (e) {
+    print('Failed to launch mini app: $e');
+    // Handle errors
   }
 }
 ```
 
 ## Best Practices
 
-1. **Preload frequently used mini apps**:
-   ```dart
-   await sdk.miniApp.preloadMiniApp('payment_mini_app');
-   ```
+1. **Use protocols for consistency**:
 
-2. **Handle errors gracefully**:
-   ```dart
-   try {
-     final widget = await sdk.miniApp.launch('payment_mini_app');
-     // Handle widget
-   } catch (e) {
-     print('Failed to launch mini app: $e');
-     // Show fallback UI
-   }
-   ```
+```swift
+protocol MiniAppViewControllerProtocol {
+    var params: [String: Any]? { get set }
+}
 
-3. **Implement proper versioning** for mini apps to ensure compatibility.
+class MiniAppViewController: UIViewController, MiniAppViewControllerProtocol {
+    var params: [String: Any]?
+    // Implementation
+}
+```
 
-4. **Use deep linking** for seamless navigation between main app and mini apps.
+2. **Handle lifecycle events properly**:
 
-5. **Consider security** by using the provided encryption capabilities for sensitive data.
+```swift
+override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    if isBeingDismissed {
+        // Send null result if being dismissed without explicit result
+        MiniAppBridge.shared.finishWithResult(nil)
+    }
+}
+```
 
-6. **Customize mini app registry** if you need special storage handling:
-   ```dart
-   class CustomMiniAppRepository implements MiniAppManifestRepository {
-     // Custom implementation
-   }
-   ```
+3. **Validate parameters** before using them:
+
+```swift
+if let userId = params?["userId"] as? String {
+    // Use userId
+} else {
+    // Handle missing parameter
+    MiniAppBridge.shared.finishWithResult(["error": "Missing userId parameter"])
+    dismiss(animated: true)
+}
+```
+
+4. **Support navigation within mini apps**:
+
+```swift
+class NavigableMiniAppViewController: UINavigationController {
+    var params: [String: Any]?
+    
+    convenience init(rootViewController: UIViewController & MiniAppViewControllerProtocol) {
+        self.init(rootViewController: rootViewController)
+        rootViewController.params = params
+    }
+}
+```
+
+5. **Support different UI modes** (light/dark theme):
+
+```swift
+override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    if let theme = params?["theme"] as? String, theme == "dark" {
+        view.backgroundColor = .black
+        // Configure other UI elements for dark theme
+    } else {
+        view.backgroundColor = .white
+        // Configure UI elements for light theme
+    }
+}
+```
 
 ## Troubleshooting
 
-- If the mini app fails to load, verify the entry path is correct.
-- Ensure the framework type matches the mini app implementation.
-- Check logs for any errors during the launch process.
-- Verify the mini app is properly registered before attempting to launch.
-- For native platform issues, check that method channel implementations are working correctly.
-- If using encrypted communication, ensure encryption keys match between components.
-- When launching web mini apps, verify that the proper method channel is available.
+- **Mini app doesn't launch**: Ensure the class name in `entryPath` is correct and accessible. Check for namespace issues.
+
+- **Parameters aren't received**: Verify your view controller correctly implements the parameter handling property.
+
+- **No result returned to Flutter**: Check that `MiniAppBridge.shared.finishWithResult()` is called when your mini app completes its task.
+
+- **Black screen after launch**: Make sure your view controller is setting up its UI correctly in `viewDidLoad`.
+
+- **Mini app crashes**: Check for any initialization errors in your view controller and ensure proper error handling.
+
+- **UI not displaying correctly**: Test on different iOS versions and devices to ensure compatibility.
+
+- **Memory leaks**: Implement proper cleanup in `deinit` and when removing observers.

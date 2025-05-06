@@ -38,8 +38,8 @@ class MiniAppPlugin : FlutterPlugin, MethodCallHandler {
 
                 // Route the request based on the framework type
                 when (framework) {
-                    FrameworkTypeConstants.REACT_NATIVE -> openReactNativeApp(appId, params)
-                    FrameworkTypeConstants.NATIVE -> openAndroidNativeApp(appId, params)
+                    FrameworkTypeConstants.REACT_NATIVE -> openReactNativeApp(appId, params, result)
+                    FrameworkTypeConstants.NATIVE -> openAndroidNativeApp(appId, params, result)
                     FrameworkTypeConstants.UNKNOWN -> result.error(
                         "INVALID_FRAMEWORK",
                         "Unsupported framework: $framework",
@@ -63,7 +63,7 @@ class MiniAppPlugin : FlutterPlugin, MethodCallHandler {
      * @param appId The ID of the React Native app to open.
      * @param params Additional parameters to pass to the app.
      */
-    private fun openReactNativeApp(appId: String, params: Map<String, Any>) {
+    private fun openReactNativeApp(appId: String, params: Map<String, Any>,  @NonNull result: Result) {
         val intent = Intent(context, ReactNativeActivity::class.java)
         intent.putExtra("appId", appId)
         intent.putExtra("params", HashMap(params))
@@ -75,12 +75,44 @@ class MiniAppPlugin : FlutterPlugin, MethodCallHandler {
      * @param appId The fully qualified class name of the native activity to open.
      * @param params Additional parameters to pass to the activity.
      */
-    private fun openAndroidNativeApp(appId: String, params: Map<String, Any>) {
-        val intent = Intent(context, Class.forName(appId))
-        params.forEach { (key, value) ->
-            intent.putExtra(key, value.toString())
+    private fun openAndroidNativeApp(appId: String, params: Map<String, Any>, @NonNull result: Result) {
+        val entryPath = params["entryPath"] as? String
+        try {
+            val intent = Intent(context, Class.forName(entryPath ?: appId))
+
+            // Add parameters to the intent
+            params.forEach { (key, value) ->
+                when (value) {
+                    is String -> intent.putExtra(key, value)
+                    is Int -> intent.putExtra(key, value)
+                    is Boolean -> intent.putExtra(key, value)
+                    is Double -> intent.putExtra(key, value)
+                    else -> intent.putExtra(key, value.toString())
+                }
+            }
+
+            // Start activity for result using ActivityResultLauncher
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+
+            // Handle the result
+            // Note: For complex result handling, consider implementing
+            // registerForActivityResult or using a result callback system
+
+            result.success(null)
+        } catch (e: ClassNotFoundException) {
+            result.error(
+                "CLASS_NOT_FOUND",
+                "Android activity class not found: $appId with entry path $entryPath",
+                e.toString()
+            )
+        } catch (e: Exception) {
+            result.error(
+                "LAUNCH_FAILED",
+                "Failed to launch Android mini app ($appId/$entryPath): ${e.message}",
+                e.toString()
+            )
         }
-        context.startActivity(intent)
     }
 
     /**

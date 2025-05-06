@@ -33,14 +33,28 @@ public class MiniAppPlugin: NSObject, FlutterPlugin {
     }
 
     private func openNativeMiniApp(appId: String, params: [String: Any], result: @escaping FlutterResult) {
-        if let viewController = UIApplication.shared.keyWindow?.rootViewController {
-            let nativeViewController = UIViewController() // Replace with your actual view controller
-            nativeViewController.view.backgroundColor = .white
-            nativeViewController.title = appId
-            viewController.present(nativeViewController, animated: true, completion: nil)
-            result(nil)
-        } else {
-            result(FlutterError(code: "NO_ROOT_VIEW_CONTROLLER", message: "Unable to find root view controller", details: nil))
+        // Find the class using the entry path
+        let entryPath = params["entryPath"] as? String ?? ""
+
+         guard let viewControllerClass = NSClassFromString(entryPath) as? UIViewController.Type else {
+                 result(FlutterError(code: "CLASS_NOT_FOUND", message: "View controller class not found: \(appId) with \(entryPath)", details: nil))
+                 return
+         }
+
+        // Create an instance of the view controller
+        let viewController = viewControllerClass.init()
+
+        // Pass parameters if the view controller can accept them
+        if let miniAppVC = viewController as? MiniAppViewController {
+            miniAppVC.params = params
+        }
+
+        // Set up the result callback
+        MiniAppBridge.shared.setResultCallback(result)
+
+        // Present the view controller
+        DispatchQueue.main.async {
+            UIApplication.shared.keyWindow?.rootViewController?.present(viewController, animated: true)
         }
     }
 

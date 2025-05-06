@@ -1,101 +1,328 @@
 # How to Add an Android Native Mini App to the Main Flutter Application
 
-This guide explains how to integrate an Android native mini app into a Flutter-based main application. The Android native mini app should be exported as a library and registered in the Flutter main app.
+This guide explains how to integrate an Android native mini app into your main Flutter application, covering creation, communication, registration, and launch processes.
 
----
+## Creating the Android Native Mini App
 
-## Exporting the Android Native Mini App as a Library
+1. **Create an Activity for your mini app**:
 
-1. **Configure the Android native mini app as a library**:
-   - Update the `build.gradle` file of the mini app:
-     ```gradle
-     apply plugin: 'com.android.library'
+```kotlin
+// MiniAppActivity.kt
+package com.example.miniapp
 
-     android {
-         compileSdkVersion 33
-         defaultConfig {
-             minSdkVersion 21
-             targetSdkVersion 33
-         }
-     }
-     ```
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.widget.TextView
+import android.content.Intent
 
-2. **Build the library**:
-   - Run the following command to generate the `.aar` file:
-     ```bash
-     ./gradlew assembleRelease
-     ```
-   - The `.aar` file will be located in the `build/outputs/aar/` directory.
+class MiniAppActivity : AppCompatActivity() {
 
-3. **Add the `.aar` file to the Flutter project**:
-   - Place the `.aar` file in the `android/libs` directory of the Flutter project.
-   - Update the `settings.gradle` file in the Flutter project:
-     ```gradle
-     include ':androidMiniApp'
-     project(':androidMiniApp').projectDir = new File('libs/androidMiniApp')
-     ```
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_mini_app)
 
-4. **Add the dependency in the `app/build.gradle`**:
-   ```gradle
-   implementation project(':androidMiniApp')
-   ```
+        // Get parameters passed from Flutter
+        val params = intent.extras
+        
+        // Set up UI elements
+        val titleTextView = findViewById<TextView>(R.id.titleTextView)
+        val completeButton = findViewById<Button>(R.id.completeButton)
 
----
+        // Use parameters if available
+        params?.let {
+            val userId = it.getString("userId")
+            val theme = it.getString("theme")
+            titleTextView.text = "Welcome User: $userId"
+            
+            // Apply theme if specified
+            if (theme == "dark") {
+                // Apply dark theme styling
+            }
+        }
 
-## Registering the Mini App in Flutter
-
-1. **Define the mini app manifest**:
-   Use the `MiniAppManifest` class to register the Android native mini app in the Flutter main app:
-   ```dart
-   await sdk.miniApp.registerMiniApp(
-     MiniAppManifest(
-       appId: 'android_native_mini_app',
-       name: 'Android Native Mini App',
-       framework: FrameworkType.native,
-       entryPath: 'com.example.miniapp.MainActivity',
-       params: {'theme': 'dark'},
-     ),
-   );
-   ```
-
----
-
-## Launching the Mini App
-
-Use the `sdk.miniApp.launch` method to launch the Android native mini app from Flutter:
-
-```dart
-Future<void> launchAndroidMiniApp() async {
-   try {
-      final result = await sdk.miniApp.launch('android_native_mini_app');
-      if (result != null) {
-         print('Mini app returned data: $result');
-      } else {
-         print('Mini app launched successfully with no return data.');
-      }
-   } catch (e) {
-      print('Failed to launch mini app: $e');
-   }
+        // Set up complete button to return result to Flutter
+        completeButton.setOnClickListener {
+            // Create result Intent with data to return to Flutter
+            val resultIntent = Intent().apply {
+                putExtra("status", "success")
+                putExtra("message", "Task completed from Android Native")
+            }
+            
+            // Set result and finish activity
+            setResult(RESULT_OK, resultIntent)
+            finish()
+        }
+    }
 }
 ```
 
----
+2. **Create the layout for your mini app**:
+
+```xml
+<!-- res/layout/activity_mini_app.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Android Native Mini App"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/completeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete Task" />
+</LinearLayout>
+```
+
+3. **Add the activity to your AndroidManifest.xml**:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.miniapp">
+    
+    <application>
+        <activity
+            android:name=".MiniAppActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+    </application>
+</manifest>
+```
+
+## Setting Up Communication
+
+The communication bridge between Flutter and Android is already implemented in the `MiniAppPlugin.kt` file. This plugin handles launching Android native mini apps from Flutter.
+
+To enhance the bridge for returning results to Flutter, modify the `MiniAppPlugin.kt` file:
+
+```kotlin
+// MiniAppPlugin.kt
+// Add this method to launch the activity for result
+
+private fun openAndroidNativeApp(appId: String, params: Map<String, Any>, result: Result) {
+    try {
+        val intent = Intent(context, Class.forName(appId))
+        
+        // Add parameters to the intent
+        params.forEach { (key, value) ->
+            when (value) {
+                is String -> intent.putExtra(key, value)
+                is Int -> intent.putExtra(key, value)
+                is Boolean -> intent.putExtra(key, value)
+                is Double -> intent.putExtra(key, value)
+                else -> intent.putExtra(key, value.toString())
+            }
+        }
+        
+        // Start activity for result using ActivityResultLauncher
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+        
+        // Handle the result
+        // Note: For complex result handling, consider implementing
+        // registerForActivityResult or using a result callback system
+        
+        result.success(null)
+    } catch (e: ClassNotFoundException) {
+        result.error(
+            "CLASS_NOT_FOUND",
+            "Android activity class not found: $appId",
+            e.toString()
+        )
+    } catch (e: Exception) {
+        result.error(
+            "LAUNCH_FAILED",
+            "Failed to launch Android mini app: ${e.message}",
+            e.toString()
+        )
+    }
+}
+```
+
+## Exporting the Mini App as a Library
+
+1. **Configure your mini app project as a library**:
+
+```gradle
+// build.gradle
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 33
+    
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 33
+    }
+    
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    // Add other dependencies as needed
+}
+```
+
+2. **Build the library**:
+
+```bash
+./gradlew assembleRelease
+```
+
+The AAR file will be generated in the `build/outputs/aar/` directory.
+
+3. **Add the library to your Flutter project**:
+
+Create a `libs` directory in the `android/` folder of your Flutter project and copy the AAR file there.
+
+4. **Update your Flutter project's settings.gradle**:
+
+```gradle
+// android/settings.gradle
+include ':app', ':mini_app_library'
+project(':mini_app_library').projectDir = new File(rootDir, 'libs/mini_app_library')
+```
+
+5. **Add the dependency to your app's build.gradle**:
+
+```gradle
+// android/app/build.gradle
+dependencies {
+    implementation project(':mini_app_library')
+}
+```
+
+## Registering the Mini App in Flutter
+
+Register the Android native mini app in your Flutter application:
+
+```dart
+// Register the mini app
+await sdk.miniApp.registerMiniApp(
+  MiniAppManifest(
+    appId: 'android_payment_app',  // A unique identifier for the mini app
+    name: 'Android Payment App',   // Display name
+    framework: FrameworkType.native, // Specify that this is a native mini app
+    entryPath: 'com.example.miniapp.MiniAppActivity', // Full class name of your activity
+    params: {'theme': 'light'},    // Default parameters
+  ),
+);
+
+// Optionally preload the mini app for better performance
+await sdk.miniApp.preloadMiniApp('android_payment_app');
+```
+
+## Launching the Mini App
+
+Launch the Android native mini app from your Flutter code:
+
+```dart
+Future<void> launchAndroidNativeMiniApp() async {
+  try {
+    final result = await sdk.miniApp.launch(
+      'android_payment_app',
+      params: {'userId': '12345', 'amount': '99.99'}
+    );
+    
+    if (result != null) {
+      print('Mini app returned data: $result');
+      // Process the returned data
+    }
+  } catch (e) {
+    print('Failed to launch mini app: $e');
+    // Handle errors
+  }
+}
+```
 
 ## Best Practices
 
-1. **Export the mini app as a library** to simplify integration.
-2. **Preload frequently used mini apps**:
-   ```dart
-   await sdk.miniApp.preloadMiniApp('android_native_mini_app');
-   ```
-3. **Handle errors gracefully** during communication and launching.
-4. **Use versioning** to ensure compatibility between the main app and mini apps.
+1. **Implement a consistent interface** across all your mini apps:
 
----
+```kotlin
+// Consider creating a common base activity for mini apps
+abstract class BaseMiniAppActivity : AppCompatActivity() {
+    protected val params: Bundle?
+        get() = intent.extras
+    
+    protected fun completeWithResult(resultData: Map<String, Any>) {
+        val resultIntent = Intent()
+        resultData.forEach { (key, value) ->
+            when (value) {
+                is String -> resultIntent.putExtra(key, value)
+                is Int -> resultIntent.putExtra(key, value)
+                is Boolean -> resultIntent.putExtra(key, value)
+                is Double -> resultIntent.putExtra(key, value.toFloat())
+                else -> resultIntent.putExtra(key, value.toString())
+            }
+        }
+        setResult(RESULT_OK, resultIntent)
+        finish()
+    }
+}
+```
+
+2. **Validate parameters** before using them:
+
+```kotlin
+val userId = params?.getString("userId") ?: run {
+    // Handle missing parameter
+    completeWithResult(mapOf("error" to "Missing userId parameter"))
+    return
+}
+```
+
+3. **Support multiple themes** for consistent UI:
+
+```kotlin
+// Apply theme based on parameter
+val theme = params?.getString("theme") ?: "light"
+if (theme == "dark") {
+    setTheme(R.style.DarkTheme)
+} else {
+    setTheme(R.style.LightTheme)
+}
+```
+
+4. **Handle activity lifecycle properly**:
+
+```kotlin
+override fun onDestroy() {
+    super.onDestroy()
+    // Clean up resources
+}
+```
 
 ## Troubleshooting
 
-- Verify the `.aar` file is correctly added to the Flutter project.
-- Ensure the `sdk.miniApp` methods are properly implemented in the Flutter app.
-- Check logs for errors during initialization or launch.
-- Confirm the mini app is registered before launching.
+- **Mini app doesn't launch**: Verify the class name in `entryPath` is correct and the activity is properly declared in AndroidManifest.xml.
+
+- **Parameters aren't received**: Check that parameters are correctly passed from Flutter and accessed in the activity.
+
+- **Crashes on launch**: Verify the activity class path and ensure all required libraries are included.
+
+- **UI issues**: Test on different Android versions and device sizes to ensure compatibility.
+
+- **ClassNotFoundException**: Make sure the AAR file is correctly added and the class path is accurate.
+
+- **Mini app closes without returning data**: Ensure the activity properly sets a result before finishing.
+
+- **Memory leaks**: Check for retained references to activities or contexts in your mini app.
+
+- **Permissions issues**: If your mini app requires specific permissions, make sure they're declared in the AndroidManifest.xml.
