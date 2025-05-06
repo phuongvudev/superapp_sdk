@@ -17,7 +17,7 @@ This document outlines the navigation mechanisms between the Main App and Mini A
 ## Key Features
 - **Deep Link Navigation**: Directly navigate to Mini Apps using URI schemes.
 - **Programmatic Navigation**: Launch Mini Apps through method calls.
-- **Framework Support**: Different navigation methods for various Mini App frameworks (Flutter, Web, Native).
+- **Framework Support**: Different navigation methods for various Mini App frameworks (Flutter, React Native, Web, Native).
 - **Parameter Passing**: Support for passing parameters to Mini Apps via deep links or method calls.
 - **Error Handling**: Robust error handling for navigation failures.
 - **Pre-loading Mini Apps**: Preload Mini Apps for improved performance.
