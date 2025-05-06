@@ -15,4 +15,5 @@ class MiniAppBridge {
         resultCallback?(result)
         resultCallback = nil
     }
+
 }

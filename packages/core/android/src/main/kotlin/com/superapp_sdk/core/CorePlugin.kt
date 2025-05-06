@@ -1,12 +1,12 @@
 package com.superapp_sdk.core
 
-import androidx.annotation.NonNull
 import com.superapp_sdk.event_bus.EventBusPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import com.superapp_sdk.mini_app.MiniAppPlugin
 
 /** CorePlugin */
 class CorePlugin: FlutterPlugin, MethodCallHandler {
@@ -24,7 +24,7 @@ class CorePlugin: FlutterPlugin, MethodCallHandler {
     initializePlugin(flutterPluginBinding)
   }
 
-  fun initializePlugin(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+  private fun initializePlugin(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     // Register EventBusPlugin
     val eventBusPlugin = EventBusPlugin()
     eventBusPlugin.onAttachedToEngine(flutterPluginBinding)

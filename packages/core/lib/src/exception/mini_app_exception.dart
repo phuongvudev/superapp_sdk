@@ -21,6 +21,47 @@ class MiniAppNotFoundException implements Exception {
       "MiniAppNotFoundException: Mini app with id '$appId' not found.";
 }
 
+/// Exception thrown when a class is not found.
+class ClassNotFoundException implements Exception {
+  /// The class name that was not found.
+  final String className;
+  final String? message;
+
+  /// Creates a new instance of `ClassNotFoundException`.
+  ///
+  /// [className] - The name of the class that could not be found.
+  ClassNotFoundException(this.className, [this.message]);
+
+  /// Returns a string representation of the exception.
+  ///
+  /// This includes the class name that caused the exception.
+  @override
+  String toString() => "ClassNotFoundException: Class '$className' not found."
+      "${message != null ? " $message" : ""}";
+}
+
+/// Exception thrown when a mini app fails to launch.
+/// This exception is used to indicate that the mini app could not be
+/// successfully launched, possibly due to an error in the launch process.
+class LaunchFailedException implements Exception {
+  final String appId;
+
+  /// The error message associated with the launch failure.
+  final String? message;
+
+  /// Creates a new instance of `LaunchFailedException`.
+  ///
+  /// [message] - The error message associated with the launch failure.
+  LaunchFailedException(this.appId, [this.message]);
+
+  /// Returns a string representation of the exception.
+  ///
+  /// This includes the error message that caused the exception.
+  @override
+  String toString() =>
+      "LaunchFailedException: Launch failed. ${message != null ? " $message" : ""}";
+}
+
 /// Exception thrown when an unsupported framework type is encountered.
 ///
 /// This exception is used to indicate that the specified framework type

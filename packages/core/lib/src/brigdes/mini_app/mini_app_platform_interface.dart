@@ -40,7 +40,7 @@ abstract class MiniAppPlatform extends PlatformInterface {
   ///
   /// [manifest] - The manifest containing metadata about the mini app.
   /// This method must be implemented by platform-specific subclasses.
-  Future<void> launchNativeMiniApp(MiniAppManifest manifest);
+  Future<void> launchMiniApp(MiniAppManifest manifest);
 
   /// Launches a web-based mini app based on the provided manifest.
   ///

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MockMiniAppPlatform extends MiniAppPlatform {
   @override
-  Future<void> launchNativeMiniApp(MiniAppManifest manifest) async {
+  Future<void> launchMiniApp(MiniAppManifest manifest) async {
     // Mock implementation for testing
   }
 

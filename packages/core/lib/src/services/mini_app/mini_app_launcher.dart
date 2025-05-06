@@ -62,7 +62,7 @@ class MiniAppLauncher with LoggerMixin implements MiniAppPreloaderRegistrar {
           return null;
         case FrameworkType.native:
         case FrameworkType.reactNative:
-          await _platform.launchNativeMiniApp(manifest);
+          await _platform.launchMiniApp(manifest);
           return null;
 
         default:

@@ -1,5 +1,6 @@
 import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
 import 'package:core/src/constants/method_channel.dart';
+import 'package:core/src/exception/mini_app_exception.dart';
 import 'package:core/src/models/mini_app_manifest.dart';
 import 'package:flutter/services.dart';
 
@@ -20,11 +21,20 @@ class MiniAppMethodChannel extends MiniAppPlatform {
   ///
   /// [manifest] - The manifest containing metadata about the mini app.
   @override
-  Future<void> launchNativeMiniApp(MiniAppManifest manifest) async {
+  Future<void> launchMiniApp(MiniAppManifest manifest) async {
     try {
       await methodChannel.invokeMethod('openMiniApp', manifest.toJson());
     } on PlatformException catch (e) {
-      throw Exception('Failed to launch native mini app: ${e.message}');
+      // Handle the exception and throw a custom error message
+      // to provide more context about the failure.
+      switch (e.code) {
+        case 'CLASS_NOT_FOUND':
+          throw ClassNotFoundException(manifest.entryPath, e.message);
+        case 'LAUNCH_FAILED':
+          throw LaunchFailedException(manifest.appId, e.message);
+        default:
+          throw Exception('Failed to launch native mini app: ${e.message}');
+      }
     }
   }
 
