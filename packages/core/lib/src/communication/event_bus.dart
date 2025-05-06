@@ -47,18 +47,7 @@ class EventBus {
     _platformMethodChannel.setMethodCallHandler(_onNativeMethodCall);
 
     _eventChannel.receiveBroadcastStream().listen((event) {
-      // Handle events received from the native platform.
-      final type = event['type'] as String;
-      var data = event['data'] as String;
-
-      // Decrypt data if an encryptor is set.
-      if (encryptor != null) {
-        data = encryptor!.decrypt(data).toString();
-      }
-
-      // Decode the JSON data and dispatch the event.
-      final mapData = jsonDecode(data);
-      dispatch(Event(type, mapData));
+      dispatch(_processEvent(event));
     });
   }
 
@@ -78,19 +67,23 @@ class EventBus {
   Future<void> _onNativeMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'dispatch':
-        final type = call.arguments['type'] as String;
-        var data = call.arguments['data'] as String;
-
-        // Decrypt data if an encryptor is set.
-        if (encryptor != null) {
-          data = encryptor!.decrypt(data).toString();
-        }
-
-        // Decode the JSON data and dispatch the event.
-        final mapData = jsonDecode(data);
-        dispatch(Event(type, mapData));
+        dispatch(_processEvent(call.arguments));
         break;
     }
+  }
+
+  Event _processEvent(Map<String, dynamic> event) {
+    final type = event['type'] as String;
+    var data = event['data'] as String;
+
+    // Decrypt data if an encryptor is set.
+    if (encryptor != null) {
+      data = encryptor!.decrypt(data).toString();
+    }
+
+    // Decode the JSON data and dispatch the event.
+    final mapData = jsonDecode(data);
+    return Event(type, mapData);
   }
 
 

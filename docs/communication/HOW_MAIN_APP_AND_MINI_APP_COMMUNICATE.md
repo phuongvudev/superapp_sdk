@@ -223,7 +223,7 @@ connector.addEventListener("themeChanged") { themeData ->
 
 ### iOS Native Mini App Integration
 
-Using the provided `EventBusPluginSwift.swift` for communication:
+Using the provided `EventBusPlugin.swift` for communication:
 
 ```swift
 // In your iOS native mini app
@@ -248,7 +248,7 @@ class MiniAppEventConnector {
             "eventName": eventName,
             "payload": data
         ]
-        EventBusPluginSwift.shared.sendEventToMainApp(eventType: eventName, eventData: eventData)
+        EventBusPlugin.shared.sendEventToMainApp(eventType: eventName, eventData: eventData)
     }
     
     func requestDataFromMainApp(requestType: String, params: [String: Any]) -> Promise<[String: Any]> {
@@ -266,7 +266,7 @@ class MiniAppEventConnector {
             }
         }
         
-        EventBusPluginSwift.shared.sendEventToMainApp(eventType: "miniAppRequest", eventData: eventData)
+        EventBusPlugin.shared.sendEventToMainApp(eventType: "miniAppRequest", eventData: eventData)
         return promise
     }
     

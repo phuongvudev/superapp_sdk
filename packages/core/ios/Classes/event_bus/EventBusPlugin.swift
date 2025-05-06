@@ -3,7 +3,7 @@ import UIKit
 import CommonCrypto
 import MedthodChannelConstants
 
-public class EventBusPluginSwift: NSObject, FlutterPlugin {
+public class EventBusPlugin: NSObject, FlutterPlugin {
 
     private var channel: FlutterMethodChannel?
     private var encryptionKey: String? = nil
@@ -11,7 +11,7 @@ public class EventBusPluginSwift: NSObject, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: MethodChannelConstants.eventBusChannelName, binaryMessenger: registrar.messenger())
-        let instance = EventBusPluginSwift()
+        let instance = EventBusPlugin()
         instance.channel = channel
         registrar.addMethodCallDelegate(instance, channel: channel)
 
@@ -65,7 +65,7 @@ public class EventBusPluginSwift: NSObject, FlutterPlugin {
     }
 }
 
-extension EventBusPluginSwift: FlutterStreamHandler {
+extension EventBusPlugin: FlutterStreamHandler {
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         self.eventSink = events
         return nil

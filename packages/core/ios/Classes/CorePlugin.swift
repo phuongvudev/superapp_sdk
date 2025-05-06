@@ -13,7 +13,7 @@ public class CorePlugin: NSObject, FlutterPlugin {
 
 
     // Register the EventBusPluginSwift
-    let eventBusInstance = EventBusPluginSwift()
+    let eventBusInstance = EventBusPlugin()
     eventBusInstance.register(with: registrar)
     registrar.addMethodCallDelegate(eventBusInstance, channel: channel)
 

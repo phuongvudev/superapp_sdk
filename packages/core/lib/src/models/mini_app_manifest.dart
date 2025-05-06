@@ -28,6 +28,9 @@ class MiniAppManifest {
   /// Optional deep links the mini app can handle.
   final List<String>? deepLinks;
 
+  /// Optional list of supported events for the mini app.
+  final List<String>? supportedEvents;
+
 
   /// Creates a new instance of `MiniAppManifest`.
   ///
@@ -45,6 +48,7 @@ class MiniAppManifest {
     this.mainComponent,
     this.params,
     this.deepLinks,
+    this.supportedEvents,
   });
 
   /// Converts the `MiniAppManifest` instance to a JSON-compatible map.
@@ -58,6 +62,7 @@ class MiniAppManifest {
     'mainComponent': mainComponent,
     'params': params,
     'deepLinks': deepLinks,
+    'supportedEvents': supportedEvents,
   };
 
   /// Creates a `MiniAppManifest` instance from a JSON-compatible map.
@@ -74,7 +79,9 @@ class MiniAppManifest {
       params: json['params'] != null
           ? Map<String, dynamic>.from(json['params'])
           : null,
-      deepLinks: json['deepLinks']
+      deepLinks: json['deepLinks'],
+      supportedEvents: json['supportedEvents'],
+
     );
   }
 
@@ -87,6 +94,7 @@ class MiniAppManifest {
     String? mainComponent,
     Map<String, dynamic>? params,
     List<String>? deepLinks,
+    List<String>? supportedEvents,
   }) {
     return MiniAppManifest(
       appId: appId ?? this.appId,
@@ -96,6 +104,7 @@ class MiniAppManifest {
       mainComponent: mainComponent ?? this.mainComponent,
       params: params ?? this.params,
       deepLinks: deepLinks ?? this.deepLinks,
+      supportedEvents: supportedEvents ?? this.supportedEvents,
     );
   }
 }
