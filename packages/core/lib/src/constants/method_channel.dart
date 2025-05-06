@@ -2,8 +2,9 @@
 ///
 /// This is used for communication between Flutter and native platforms.
 final class MethodChannelConstants {
-
-  static const String methodChannelEventBus = 'com.supperapp_sdk/event_bus';
   static const String methodChannelMiniApp = 'com.supperapp_sdk/mini_app';
 
+  static const String methodChannelEventBus = 'com.supperapp_sdk/event_bus';
+  static const String eventChannelEventBus =
+      'com.supperapp_sdk/event_bus_stream';
 }

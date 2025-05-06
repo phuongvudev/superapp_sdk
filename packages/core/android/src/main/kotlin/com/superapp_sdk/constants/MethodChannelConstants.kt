@@ -18,5 +18,11 @@ class MethodChannelConstants {
          * Used to handle mini app interactions between Flutter and native Android.
          */
         const val METHOD_CHANNEL_MINI_APP = "com.supperapp_sdk/mini_app"
+
+        /**
+         * The EventChannel name for the Event Bus plugin.
+         * Used to stream events from native Android to Flutter.
+         */
+        const val EVENT_CHANNEL_EVENT_BUS = "com.supperapp_sdk/event_bus_stream"
     }
 }

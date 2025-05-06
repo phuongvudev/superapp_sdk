@@ -22,27 +22,51 @@ class EventBus {
   final MethodChannel _platformMethodChannel =
       const MethodChannel(MethodChannelConstants.methodChannelEventBus);
 
+  /// EventChannel for receiving events from native platforms.
+  final EventChannel _eventChannel =
+      const EventChannel(MethodChannelConstants.eventChannelEventBus);
+
   /// Optional encryptor for encrypting and decrypting event data.
-  Encryptor? encryptor;
+  MapEncryptor? encryptor;
 
   /// Singleton instance of EventBus.
   static final EventBus _instance = EventBus._internal();
 
   /// Factory constructor to return the singleton instance.
-  factory EventBus({Encryptor? encryptor, String? encryptionKey}) =>
-      _instance.._setEncryptor(encryptor, encryptionKey);
+  factory EventBus({MapEncryptor? encryptor, String? encryptionKey}){
+    // If an instance already exists, return it.
+    if (encryptor == null && encryptionKey == null) {
+      _instance._setEncryptor(encryptor, encryptionKey);
+    }
+    return _instance;
+  }
 
   /// Private constructor for singleton pattern.
   EventBus._internal() {
     // Set up a handler for method calls from the native platform.
     _platformMethodChannel.setMethodCallHandler(_onNativeMethodCall);
+
+    _eventChannel.receiveBroadcastStream().listen((event) {
+      // Handle events received from the native platform.
+      final type = event['type'] as String;
+      var data = event['data'] as String;
+
+      // Decrypt data if an encryptor is set.
+      if (encryptor != null) {
+        data = encryptor!.decrypt(data).toString();
+      }
+
+      // Decode the JSON data and dispatch the event.
+      final mapData = jsonDecode(data);
+      dispatch(Event(type, mapData));
+    });
   }
 
   /// Sets the encryptor for the EventBus.
   ///
   /// [encryptor] - The encryptor instance to use for encryption and decryption.
   /// [encryptionKey] - The encryption key to use with the encryptor.
-  void _setEncryptor(Encryptor? encryptor, String? encryptionKey) {
+  void _setEncryptor(MapEncryptor? encryptor, String? encryptionKey) {
     this.encryptor = encryptor;
     _platformMethodChannel
         .invokeMethod("setEncryptionKey", {"key": encryptionKey});
@@ -68,6 +92,8 @@ class EventBus {
         break;
     }
   }
+
+
 
   /// Dispatches an event to all listeners and sends it to native platforms.
   ///

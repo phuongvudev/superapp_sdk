@@ -8,6 +8,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.EventChannel
 import android.util.Log
 import com.superapp_sdk.constants.MethodChannelConstants
 import org.json.JSONObject
@@ -24,6 +25,7 @@ class EventBusPlugin : FlutterPlugin, MethodCallHandler {
     /// The MethodChannel for communication between Flutter and native Android.
     private lateinit var channel: MethodChannel
     private var encryptionKey: String? = null
+    private val eventSink = mutableListOf<EventChannel.EventSink>()
 
     /**
      * Called when the plugin is attached to the Flutter engine.
@@ -32,6 +34,17 @@ class EventBusPlugin : FlutterPlugin, MethodCallHandler {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, MethodChannelConstants.METHOD_CHANNEL_EVENT_BUS)
         channel.setMethodCallHandler(this)
+
+        val eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, MethodChannelConstants.EVENT_CHANNEL_EVENT_BUS)
+        eventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                events?.let { eventSink.add(it) }
+            }
+
+            override fun onCancel(arguments: Any?) {
+                eventSink.clear()
+            }
+        })
     }
 
     /**
@@ -71,6 +84,17 @@ class EventBusPlugin : FlutterPlugin, MethodCallHandler {
             else -> {
                 result.notImplemented()
             }
+        }
+    }
+
+    /**
+     * Sends an event to the main app.
+     * @param eventType The type of the event.
+     * @param eventData The data associated with the event.
+     */
+    fun sendEventToMainApp(eventType: String, eventData: Map<String, Any>) {
+        for (sink in eventSink) {
+            sink.success(mapOf("type" to eventType, "data" to eventData))
         }
     }
 

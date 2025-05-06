@@ -1,13 +1,26 @@
 import 'dart:convert';
 import 'package:encrypt/encrypt.dart';
 
+abstract class EncryptorBase<Input> {
+  /// Encrypts a data with data type [Input] into a string.
+  String encrypt(Input data);
+
+  /// Decrypts an encrypted string back into a map of data.
+  ///
+  /// [encryptedData] - The encrypted string to be decrypted.
+  ///
+  /// Returns the decrypted Input data.
+  Input decrypt(String encryptedData);
+}
+
 /// Abstract class for encryption and decryption of data.
-abstract class Encryptor {
+abstract class MapEncryptor extends EncryptorBase<Map<String, dynamic>> {
   /// Encrypts a map of data into a string.
   ///
   /// [data] - The map of data to be encrypted.
   ///
   /// Returns the encrypted string.
+  @override
   String encrypt(Map<String, dynamic> data);
 
   /// Decrypts an encrypted string back into a map of data.
@@ -15,11 +28,12 @@ abstract class Encryptor {
   /// [encryptedData] - The encrypted string to be decrypted.
   ///
   /// Returns the decrypted map of data.
+  @override
   Map<String, dynamic> decrypt(String encryptedData);
 }
 
 /// Implementation of the Encryptor interface using AES encryption.
-class AESEncryptor implements Encryptor {
+class AESEncryptor implements MapEncryptor {
   /// The encryption key used for AES encryption.
   final String encryptionKey;
 

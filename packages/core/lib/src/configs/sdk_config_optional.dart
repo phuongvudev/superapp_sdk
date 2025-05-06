@@ -15,7 +15,7 @@ class SDKOptionalConfig {
   final Map<FrameworkType, MiniAppPreloader>? miniAppPreLoaders;
 
   /// Optional encryptor for handling encryption.
-  final Encryptor? encryptor;
+  final MapEncryptor? encryptor;
 
   /// Optional encryption key for secure communication.
   final String? encryptionKey;

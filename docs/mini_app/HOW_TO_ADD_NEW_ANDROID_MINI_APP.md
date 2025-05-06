@@ -99,4 +99,3 @@ Future<void> launchAndroidMiniApp() async {
 - Ensure the `sdk.miniApp` methods are properly implemented in the Flutter app.
 - Check logs for errors during initialization or launch.
 - Confirm the mini app is registered before launching.
-```
