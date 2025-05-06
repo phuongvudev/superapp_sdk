@@ -4,6 +4,16 @@
 
 This document outlines the navigation mechanisms between the Main App and Mini Apps, including the technical implementation, communication flow, and supported navigation patterns. The goal is to provide a comprehensive guide for developers to understand how to navigate to Mini Apps seamlessly, whether through deep links or programmatic calls.
 
+## Why choose Deep Link Navigation?
+- Deep linking is a powerful mechanism that allows users to navigate directly to specific content within Mini Apps. It enhances user experience by enabling quick access to features without going through multiple screens in the Main App. This document will cover the deep link navigation process, including how to define deep links, handle parameters, and manage navigation errors.
+- Deep links are URIs that point to specific content within a Mini App. They can be used to launch Mini Apps directly from external sources, such as notifications, emails, or other apps. The deep link structure typically includes the Mini App ID and any necessary parameters.
+- Deep links can be defined in the Mini App manifest, allowing the Main App to recognize and handle them appropriately. The deep link dispatcher in the Main App captures incoming deep links and matches them against registered Mini App patterns.
+- The deep link dispatcher extracts parameters from the URI and passes them to the Mini App launcher, which is responsible for launching the Mini App with the provided parameters.
+- The Mini App launcher handles the actual navigation process, including loading the Mini App based on its framework type (Flutter, Web, Native) and managing any necessary data passing between the Main App and the Mini App.
+- The deep link navigation process is designed to be flexible and extensible, allowing developers to easily add new Mini Apps and define their deep link patterns. This modular approach enables the Main App to support a wide range of Mini Apps without requiring significant changes to the core navigation logic.
+- The deep link dispatcher and Mini App launcher work together to ensure a smooth navigation experience, handling any errors or exceptions that may occur during the process. This includes validating deep links, checking for required parameters, and providing fallback options in case of navigation failures.
+- The deep link navigation process is designed to be user-friendly and efficient, allowing users to quickly access Mini Apps without unnecessary delays or complications. By leveraging deep links, the Main App can provide a seamless experience for users, enabling them to interact with Mini Apps in a more intuitive and engaging way.
+
 ## Key Features
 - **Deep Link Navigation**: Directly navigate to Mini Apps using URI schemes.
 - **Programmatic Navigation**: Launch Mini Apps through method calls.
