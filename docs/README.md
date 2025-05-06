@@ -25,9 +25,11 @@ Step-by-step guides for creating and integrating mini apps using different techn
 
 Details on the communication mechanisms between the main app and mini apps.
 
-| File | Description | Link |
-|------|-------------|------|
-| Communication Guide | Event Bus architecture for communication between main app and mini apps | [HOW_MAIN_APP_AND_MINI_APP_COMMUNICATE.md](docs/communication/HOW_MAIN_APP_AND_MINI_APP_COMMUNICATE.md) |
+| File                   | Description | Link |
+|------------------------|-------------|------|
+| Communication Guide    | Event Bus architecture for communication between main app and mini apps | [HOW_MAIN_APP_AND_MINI_APP_COMMUNICATE.md](docs/communication/HOW_MAIN_APP_AND_MINI_APP_COMMUNICATE.md) |
+| Event Bus Architecture | Overview of the Event Bus system, including security and platform-specific implementations | [MAIN_APP_COMMUNICATION_ARCHITECTURE.md](docs/communication/MAIN_APP_COMMUNICATION_ARCHITECTURE.md) |
+| Main App Navigate to Mini App | How to navigate from the main app to a mini app | [HOW_MAIN_APP_NAVIGATE_TO_MINI_APP.md](communication/HOW_MAIN_APP_NAVIGATE_TO_MINI_APP.md)|
 
 ## Deployment Strategies
 
