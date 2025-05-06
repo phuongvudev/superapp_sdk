@@ -108,10 +108,15 @@ To enhance the bridge for returning results to Flutter, modify the `MiniAppPlugi
 // MiniAppPlugin.kt
 // Add this method to launch the activity for result
 
-private fun openAndroidNativeApp(appId: String, params: Map<String, Any>, result: Result) {
+private fun openApp(
+    appId: String,
+    params: Map<String, Any>,
+    result: Result
+) {
+    val entryPath = params["entryPath"] as? String
     try {
-        val intent = Intent(context, Class.forName(appId))
-        
+        val intent = Intent(context, Class.forName(entryPath ?: appId))
+
         // Add parameters to the intent
         params.forEach { (key, value) ->
             when (value) {
@@ -122,26 +127,28 @@ private fun openAndroidNativeApp(appId: String, params: Map<String, Any>, result
                 else -> intent.putExtra(key, value.toString())
             }
         }
-        
+
         // Start activity for result using ActivityResultLauncher
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-        
-        // Handle the result
-        // Note: For complex result handling, consider implementing
-        // registerForActivityResult or using a result callback system
-        
-        result.success(null)
+        if (activity != null) {
+            // Set up result callback
+            MiniAppBridge.getInstance().setResultCallback(result)
+            activityResultLauncher.launch(intent)
+        } else {
+            // Fallback to regular startActivity if activity isn't available
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+            result.success(null)
+        }
     } catch (e: ClassNotFoundException) {
         result.error(
             "CLASS_NOT_FOUND",
-            "Android activity class not found: $appId",
+            "Android activity class not found: $appId with entry path $entryPath",
             e.toString()
         )
     } catch (e: Exception) {
         result.error(
             "LAUNCH_FAILED",
-            "Failed to launch Android mini app: ${e.message}",
+            "Failed to launch Android mini app ($appId/$entryPath): ${e.message}",
             e.toString()
         )
     }
