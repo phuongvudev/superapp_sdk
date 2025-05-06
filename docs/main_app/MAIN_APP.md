@@ -35,7 +35,7 @@ The main app is responsible for core functionalities such as navigation, state m
 - **Support for Modern Development Practices**: Flutter embraces modern development practices such as declarative UI, reactive programming, and functional programming paradigms, making it a forward-thinking choice for app development.
 - **Community Events and Conferences**: Regular community events, meetups, and conferences provide opportunities for networking, learning, and sharing knowledge among Flutter developers.
 - **Open Source**: Flutter is open source, allowing developers to contribute to its development and customize it for their specific needs.
-- 
+
 ## Key Features
 - **Modular Architecture**: Each mini app can be developed and deployed independently.
 - **Cross-Platform Support**: Built to work on iOS, Android, and Web.

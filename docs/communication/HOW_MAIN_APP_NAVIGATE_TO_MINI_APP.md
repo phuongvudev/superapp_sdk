@@ -15,7 +15,7 @@ This document outlines the navigation mechanisms between the Main App and Mini A
 - **Security Considerations**: Recommendations for validating deep links and sanitizing input parameters.
 - **Navigation Lifecycle**: Overview of the steps involved in navigating to a Mini App.
 - **Mini App Registry**: Centralized registry for Mini Apps, including their manifests and deep link patterns.
-- 
+
 ## Navigation Architecture
 
 The Main App navigation to Mini Apps is built on a flexible architecture that supports multiple navigation methods:
