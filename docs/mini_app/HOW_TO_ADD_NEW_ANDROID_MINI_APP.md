@@ -1,4 +1,3 @@
-```markdown
 # How to Add an Android Native Mini App to the Main Flutter Application
 
 This guide explains how to integrate an Android native mini app into a Flutter-based main application. The Android native mini app should be exported as a library and registered in the Flutter main app.
