@@ -294,3 +294,8 @@ override func viewDidLoad() {
 - **UI not displaying correctly**: Test on different iOS versions and devices to ensure compatibility.
 
 - **Memory leaks**: Implement proper cleanup in `deinit` and when removing observers.
+
+## References
+- [Flutter Plugin Development](https://flutter.dev/docs/development/packages-and-plugins/developing-packages)
+- [Swift Protocols](https://docs.swift.org/swift-book/LanguageGuide/Protocols.html)
+- [UIKit Documentation](https://developer.apple.com/documentation/uikit)

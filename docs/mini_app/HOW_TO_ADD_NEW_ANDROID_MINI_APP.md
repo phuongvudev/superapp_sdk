@@ -333,3 +333,14 @@ override fun onDestroy() {
 - **Memory leaks**: Check for retained references to activities or contexts in your mini app.
 
 - **Permissions issues**: If your mini app requires specific permissions, make sure they're declared in the AndroidManifest.xml.
+
+## References
+- [Flutter Plugin Development](https://flutter.dev/docs/development/packages-and-plugins/developing-packages)
+- [Android Activity Lifecycle](https://developer.android.com/guide/components/activities/activity-lifecycle)
+- [Android Intents and Intent Filters](https://developer.android.com/guide/components/intents-filters)
+- [Flutter Platform Channels](https://flutter.dev/docs/development/platform-integration/platform-channels)
+- [Android Gradle Plugin](https://developer.android.com/studio/releases/gradle-plugin)
+- [Android Library Projects](https://developer.android.com/studio/projects/android-library)
+- [Android Manifest File](https://developer.android.com/guide/topics/manifest/manifest-intro)
+- [Android UI Design Guidelines](https://developer.android.com/design)
+- [Android Material Design](https://material.io/develop/android)
