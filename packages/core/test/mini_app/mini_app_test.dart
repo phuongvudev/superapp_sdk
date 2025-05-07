@@ -1,5 +1,5 @@
-import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
-import 'package:core/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/brigdes/mini_app/mini_app_platform_interface.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class MockMiniAppPlatform extends MiniAppPlatform {

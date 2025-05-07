@@ -1,4 +1,4 @@
-import 'package:core/src/brigdes/core/core_platform_interface.dart';
+import 'package:skit_sdk/src/brigdes/core/core_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 

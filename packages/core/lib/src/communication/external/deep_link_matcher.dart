@@ -1,4 +1,4 @@
-import 'package:core/src/logger/logger.dart';
+import 'package:skit_sdk/src/logger/logger.dart';
 
 class DeepLinkMatcher {
   /// Checks if a given URI matches a deep link pattern.

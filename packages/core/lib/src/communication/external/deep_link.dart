@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
-import 'package:core/src/communication/external/deep_link_matcher.dart';
-import 'package:core/src/logger/logger_mixin.dart';
-import 'package:core/src/models/mini_app_manifest.dart';
-import 'package:core/src/services/mini_app/mini_app_launcher.dart';
-import 'package:core/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/communication/external/deep_link_matcher.dart';
+import 'package:skit_sdk/src/logger/logger_mixin.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/services/mini_app/mini_app_launcher.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
 
 class DeepLinkDispatcher with LoggerMixin {
   final MiniAppLauncher miniAppLauncher;

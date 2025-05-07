@@ -1,4 +1,4 @@
-import 'package:core/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
 
 /// Exception thrown when a mini app with the specified ID is not found.
 ///

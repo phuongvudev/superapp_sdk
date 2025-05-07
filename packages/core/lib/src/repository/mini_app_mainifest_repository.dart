@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:core/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 
 /// Abstract base class for managing mini app manifests.
 ///

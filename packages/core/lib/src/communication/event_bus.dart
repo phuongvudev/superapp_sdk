@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:core/src/constants/method_channel.dart';
-import 'package:core/src/encrypt/encryptor.dart';
-import 'package:core/src/models/event.dart';
+import 'package:skit_sdk/src/constants/method_channel.dart';
+import 'package:skit_sdk/src/encrypt/encryptor.dart';
+import 'package:skit_sdk/src/models/event.dart';
 import 'package:flutter/services.dart';
 
 /// EventBus class for managing communication between different parts of the app.

@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
-import 'package:core/src/constants/framework_type.dart';
-import 'package:core/src/exception/mini_app_exception.dart';
-import 'package:core/src/logger/logger_mixin.dart';
-import 'package:core/src/models/mini_app_manifest.dart';
-import 'package:core/src/repository/mini_app_mainifest_repository.dart';
-import 'package:core/src/services/mini_app/mini_app_preloader.dart';
+import 'package:skit_sdk/src/brigdes/mini_app/mini_app_platform_interface.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/exception/mini_app_exception.dart';
+import 'package:skit_sdk/src/logger/logger_mixin.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/repository/mini_app_mainifest_repository.dart';
+import 'package:skit_sdk/src/services/mini_app/mini_app_preloader.dart';
 import 'package:flutter/material.dart';
 
 class MiniAppLauncher with LoggerMixin implements MiniAppPreloaderRegistrar {

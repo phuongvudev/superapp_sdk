@@ -1,4 +1,4 @@
-import 'package:core/src/brigdes/core/core_method_channel.dart';
+import 'package:skit_sdk/src/brigdes/core/core_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 

@@ -1,7 +1,7 @@
-import 'package:core/src/brigdes/mini_app/mini_app_platform_interface.dart';
-import 'package:core/src/constants/method_channel.dart';
-import 'package:core/src/exception/mini_app_exception.dart';
-import 'package:core/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/brigdes/mini_app/mini_app_platform_interface.dart';
+import 'package:skit_sdk/src/constants/method_channel.dart';
+import 'package:skit_sdk/src/exception/mini_app_exception.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 import 'package:flutter/services.dart';
 
 /// Implementation of `MiniAppPlatform` using method channels.

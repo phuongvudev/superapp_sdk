@@ -3,7 +3,7 @@
 // package as the core of your plugin.
 // ignore: avoid_web_libraries_in_flutter
 
-import 'package:core/src/brigdes/core/core_platform_interface.dart';
+import 'package:skit_sdk/src/brigdes/core/core_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart' as web;
 

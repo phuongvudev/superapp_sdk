@@ -1,5 +1,5 @@
-import 'package:core/src/brigdes/mini_app/mini_app_method_channel.dart';
-import 'package:core/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/brigdes/mini_app/mini_app_method_channel.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// Abstract base class for the Mini App platform interface.

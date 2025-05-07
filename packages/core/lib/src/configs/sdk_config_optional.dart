@@ -1,7 +1,7 @@
-import 'package:core/src/constants/framework_type.dart';
-import 'package:core/src/encrypt/encryptor.dart';
-import 'package:core/src/repository/mini_app_mainifest_repository.dart';
-import 'package:core/src/services/mini_app/mini_app_preloader.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/encrypt/encryptor.dart';
+import 'package:skit_sdk/src/repository/mini_app_mainifest_repository.dart';
+import 'package:skit_sdk/src/services/mini_app/mini_app_preloader.dart';
 
 /// A class representing optional configuration for the SDK.
 ///

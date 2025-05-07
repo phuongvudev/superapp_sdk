@@ -1,5 +1,5 @@
-import 'package:core/src/constants/framework_type.dart';
-import 'package:core/src/models/mini_app_manifest.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 
 /// Interface for registering preloader implementations for different frameworks.
 ///

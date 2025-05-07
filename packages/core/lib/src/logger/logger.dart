@@ -1,5 +1,5 @@
-import 'package:core/src/logger/log_level.dart';
-import 'package:core/src/logger/log_sink.dart';
+import 'package:skit_sdk/src/logger/log_level.dart';
+import 'package:skit_sdk/src/logger/log_sink.dart';
 
 /// Manages loggers and global log sinks for the application.
 class LogManager {

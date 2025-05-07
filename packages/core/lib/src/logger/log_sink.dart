@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:core/src/logger/log_level.dart';
+import 'package:skit_sdk/src/logger/log_level.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 

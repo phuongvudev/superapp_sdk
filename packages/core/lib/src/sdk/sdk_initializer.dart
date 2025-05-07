@@ -1,8 +1,8 @@
-import 'package:core/src/communication/event_bus.dart';
-  import 'package:core/src/communication/external/deep_link.dart';
-import 'package:core/src/configs/sdk_config_optional.dart';
-  import 'package:core/src/logger/logger_mixin.dart';
-  import 'package:core/src/services/mini_app/mini_app_launcher.dart';
+import 'package:skit_sdk/src/communication/event_bus.dart';
+  import 'package:skit_sdk/src/communication/external/deep_link.dart';
+import 'package:skit_sdk/src/configs/sdk_config_optional.dart';
+  import 'package:skit_sdk/src/logger/logger_mixin.dart';
+  import 'package:skit_sdk/src/services/mini_app/mini_app_launcher.dart';
 
   /// The main SDK initializer class.
   ///

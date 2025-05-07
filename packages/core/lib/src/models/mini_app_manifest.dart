@@ -1,5 +1,6 @@
-import 'package:core/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
 import 'package:flutter/foundation.dart';
+import 'package:skit_sdk/src/constants/framework_type.dart';
 
 /// Represents the manifest of a mini app.
 ///
