@@ -27,7 +27,7 @@ Additional benefits of Flutter include:
 - Strong testing frameworks for unit, widget, and integration testing
 - Open source flexibility and customization options
 - Support for declarative UI and modern development patterns
-```
+
 
 ## Key Features
 - **Modular Architecture**: Each mini app can be developed and deployed independently.
