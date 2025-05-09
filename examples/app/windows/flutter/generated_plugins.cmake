@@ -4,7 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
-  core
+  skit_sdk
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

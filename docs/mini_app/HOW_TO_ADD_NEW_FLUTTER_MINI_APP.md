@@ -193,7 +193,11 @@ await sdk.miniApp.registerMiniApp(
     name: 'My Flutter Mini App',
     framework: FrameworkType.flutter,
     entryPath: 'packages/my_flutter_mini_app/lib/main.dart',
-    params: {'theme': 'light'}, // Default parameters
+    params: {'theme': 'light'},
+    appBuilder: (params) => MiniApp(
+      params: params,
+    ),
+// Default parameters
   ),
 );
 

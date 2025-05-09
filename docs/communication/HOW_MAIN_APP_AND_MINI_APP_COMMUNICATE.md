@@ -107,7 +107,7 @@ class EventBus {
 
 ```dart
 // In your Flutter main app
-import 'package:core/core.dart';
+import 'package:skit_sdk/core.dart';
 
 class MainAppEventManager {
   final EventBus _eventBus = EventBus();
@@ -153,6 +153,10 @@ class MainAppEventManager {
         break;
       case 'userData':
         // Send user data to mini app
+        _eventBus.dispatch(Event('response_$requestType', {
+          'miniAppId': miniAppId,
+          'data': getUserData()
+        }));
         break;
       // Other request types
     }

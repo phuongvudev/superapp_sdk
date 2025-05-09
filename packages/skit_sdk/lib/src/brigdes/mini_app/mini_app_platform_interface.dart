@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:skit_sdk/src/brigdes/mini_app/mini_app_method_channel.dart';
 import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -47,4 +48,10 @@ abstract class MiniAppPlatform extends PlatformInterface {
   /// [manifest] - The manifest containing metadata about the mini app.
   /// This method must be implemented by platform-specific subclasses.
   Future<void> launchWebMiniApp(MiniAppManifest manifest);
+
+  /// Launches a Flutter mini app based on the provided manifest.
+  ///
+  /// [manifest] - The manifest containing metadata about the mini app.
+  /// This method must be implemented by platform-specific subclasses.
+  Widget? launchFlutterMiniApp(MiniAppManifest manifest);
 }

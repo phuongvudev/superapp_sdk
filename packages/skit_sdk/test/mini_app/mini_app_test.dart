@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:skit_sdk/src/brigdes/mini_app/mini_app_platform_interface.dart';
 import 'package:skit_sdk/src/models/mini_app_manifest.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +13,12 @@ class MockMiniAppPlatform extends MiniAppPlatform {
   Future<void> launchWebMiniApp(MiniAppManifest manifest) async {
     // Mock implementation for testing
   }
+
+  @override
+  Widget? launchFlutterMiniApp( MiniAppManifest manifest) {
+    // TODO: implement launchFlutterMiniApp
+    throw UnimplementedError();
+  }
 }
 
 void main() {
@@ -25,6 +32,5 @@ void main() {
       MiniAppPlatform.instance = mockPlatform;
       expect(MiniAppPlatform.instance, equals(mockPlatform));
     });
-
   });
 }

@@ -29,7 +29,6 @@ class MiniAppLauncher with LoggerMixin implements MiniAppPreloaderRegistrar {
       Map<FrameworkType, MiniAppPreloader>? preLoaders}) {
     _registry = registry ??
         FileMiniAppManifestRepository('assets/data/mini_app/mini_apps.json');
-
     _preLoaders = preLoaders ??
         {
           FrameworkType.web: WebPreloader(),
@@ -64,6 +63,8 @@ class MiniAppLauncher with LoggerMixin implements MiniAppPreloaderRegistrar {
         case FrameworkType.reactNative:
           await _platform.launchMiniApp(manifest);
           return null;
+        case FrameworkType.flutter:
+          return _platform.launchFlutterMiniApp(manifest);
 
         default:
           throw UnsupportedFrameworkException(manifest.framework);

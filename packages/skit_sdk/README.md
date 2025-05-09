@@ -1,6 +1,6 @@
-# Core Package
+# SKIT SDK Package
 
-The `core` package provides the foundational building blocks for our Flutter mini-app ecosystem. It contains essential services, models, and utilities used across all mini-apps and the host application.
+The `SKIT SDK` package provides the foundational building blocks for our Flutter mini-app ecosystem. It contains essential services, models, and utilities used across all mini-apps and the host application.
 
 ## Overview
 
@@ -83,7 +83,7 @@ Then, run `flutter pub get`.
 
 ## Contributing
 
-Contributions to the `core` package are welcome! Please follow these guidelines:
+Contributions to the `skit_sdk` package are welcome! Please follow these guidelines:
 
 1.  Fork the repository.
 2.  Create a new branch for your feature or bug fix.

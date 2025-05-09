@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  melos: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +18,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+workspace:
+  - packages/skit_sdk
+  - packages/dynamic_app_icon
