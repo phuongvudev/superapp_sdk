@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:skit_sdk/src/brigdes/mini_app/mini_app_platform_interface.dart';
 import 'package:skit_sdk/src/constants/framework_type.dart';
 import 'package:skit_sdk/src/exception/mini_app_exception.dart';
@@ -169,7 +170,7 @@ class MiniAppKitBuilder with LoggerMixin {
     try {
       // Create default registry if not provided
       final registry =
-          _registry ?? FileMiniAppManifestRepository(_registryPath);
+          _registry ?? AssetMiniAppManifestRepository(_registryPath);
 
       // Create default preloaders if not provided
       final preLoaders =

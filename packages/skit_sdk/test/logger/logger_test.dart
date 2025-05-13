@@ -1,6 +1,4 @@
-import 'package:skit_sdk/src/logger/log_level.dart';
 import 'package:skit_sdk/src/logger/logger.dart';
-import 'package:skit_sdk/src/logger/log_sink.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class MockLogSink extends LogSink {

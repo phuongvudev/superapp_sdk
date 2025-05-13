@@ -56,3 +56,43 @@ final class FileMiniAppManifestRepository implements MiniAppManifestRepository {
     file.writeAsStringSync(jsonString);
   }
 }
+
+
+final class AssetMiniAppManifestRepository
+    implements MiniAppManifestRepository {
+  final String filePath;
+  AssetMiniAppManifestRepository(this.filePath);
+  /// Loads the mini app manifest registry from the asset bundle.
+  ///
+  /// Reads the JSON file from the asset bundle and converts it into a map
+  /// of mini app manifests.
+  @override
+  Future<Map<String, MiniAppManifest>> loadRegistry() async {
+    final jsonString = await rootBundle.loadString(filePath);
+    final data = jsonDecode(jsonString) as List<dynamic>;
+    // Convert the list of maps to a map of mini app manifests
+    if (data.isEmpty) {
+      return {};
+    } else {
+      return _convertToMap(data);
+    }
+  }
+  /// Converts a list of mini app manifests to a map.
+
+  Map<String, MiniAppManifest> _convertToMap(List<dynamic> data) {
+    final Map<String, MiniAppManifest> registry = {};
+    for (var item in data) {
+      final manifest = MiniAppManifest.fromJson(item);
+      registry[manifest.appId] = manifest;
+    }
+    return registry;
+  }
+
+  /// Saves the mini app manifest registry to the asset bundle.
+  ///
+  /// This operation is not supported for asset bundles.
+  @override
+  void saveRegistry(Map<String, MiniAppManifest> registry) {
+    throw UnsupportedError('Saving to asset bundle is not supported.');
+  }
+}

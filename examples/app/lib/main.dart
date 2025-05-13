@@ -6,16 +6,15 @@ import 'package:flutter/material.dart';
 
 import 'di/di.dart';
 
-Future<void> main() async {
-  // Initialize dependency injection
-  await setupDependencyInjection();
-  // Initialize the logger
-  initLogger();
+void main() {
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Initialize dependency injection
 
-  runZonedGuarded(() {
-    // Initialize the app manager
-    appManager.initialize();
-    return runApp(const MyApp());
+    await setupDependencyInjection();
+    // Initialize the logger
+    initLogger();
+    runApp(const MyApp());
   }, onError);
 }
 

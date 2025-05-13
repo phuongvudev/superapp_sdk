@@ -133,39 +133,18 @@ class ConsoleLogSink extends LogSink {
   }) async {
     if (kDebugMode) {
       final now = DateTime.now().toLocal().toString();
-      final levelColor = _getColorForLevel(level);
+      final levelColor = level.color;
 
-      final formattedMessage = """
-$levelColor
-[$now] [$level] [$name]
-$message
-\u001b[0m"""; // Reset color
-      print(formattedMessage);
-      if (error != null) {
-        print("Error: $error");
-      }
-      if (stackTrace != StackTrace.empty) {
-        print("StackTrace: $stackTrace");
-      }
-    }
-  }
+      final formattedMessage =
+          "$levelColor[$now] [${level.displayName}] $message$_ansiReset";
 
-  /// Returns the color code for the specified log level.
-  String _getColorForLevel(LogLevel level) {
-    switch (level) {
-      case LogLevel.info:
-        return "\u001b[32m"; // Green
-      case LogLevel.warning:
-        return "\u001b[33m"; // Yellow
-      case LogLevel.error:
-        return "\u001b[31m"; // Red
-      case LogLevel.debug:
-        return "\u001b[36m"; // Cyan
-      case LogLevel.verbose:
-        return "\u001b[37m"; // White
-      case LogLevel.fatal:
-      case LogLevel.wtf:
-        return "\u001b[35m"; // Magenta
+      developer.log(
+        formattedMessage,
+        name: name,
+        level: level.levelIndex,
+        error: error,
+        stackTrace: stackTrace == StackTrace.empty ? null : stackTrace,
+      );
     }
   }
 }

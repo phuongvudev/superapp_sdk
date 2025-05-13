@@ -6,7 +6,7 @@ public class EventBusPlugin: NSObject, FlutterPlugin {
 
     private var channel: FlutterMethodChannel?
     private var encryptionKey: String? = nil
-    private var eventSink: FlutterEventSink?
+private var eventSink: FlutterEventSink?
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: MethodChannelConstants.eventBusChannelName, binaryMessenger: registrar.messenger())
@@ -85,7 +85,9 @@ extension EventBusPlugin: FlutterStreamHandler {
         var key = Data(count: keyLength)
         let actualKeyLength = min(keyData.count, keyLength)
 
-        keyData.copyBytes(to: &key, count: actualKeyLength)
+        key.withUnsafeMutableBytes { (keyBytes: UnsafeMutableRawBufferPointer) in
+            keyData.copyBytes(to: keyBytes.bindMemory(to: UInt8.self).baseAddress!, count: actualKeyLength)
+        }
 
         let ivSize = kCCBlockSizeAES128
         var iv = Data(count: ivSize)
@@ -139,7 +141,9 @@ extension EventBusPlugin: FlutterStreamHandler {
         var key = Data(count: keyLength)
         let actualKeyLength = min(keyData.count, keyLength)
 
-        keyData.copyBytes(to: &key, count: actualKeyLength)
+        key.withUnsafeMutableBytes { (keyBytes: UnsafeMutableRawBufferPointer) in
+            keyData.copyBytes(to: keyBytes.bindMemory(to: UInt8.self).baseAddress!, count: actualKeyLength)
+        }
 
         let ivSize = kCCBlockSizeAES128
         let iv = encryptedDataWithIV.prefix(ivSize)

@@ -1,5 +1,13 @@
-
 part of 'logger.dart';
+
+const String _ansiReset = "\u001b[0m";
+const String _ansiGreen = "\u001b[32m";
+const String _ansiYellow = "\u001b[33m";
+const String _ansiRed = "\u001b[31m";
+const String _ansiCyan = "\u001b[36m";
+const String _ansiWhite = "\u001b[37m";
+const String _ansiMagenta = "\u001b[35m";
+
 /// Enum representing different log levels for logging purposes.
 enum LogLevel {
   /// Verbose log level, used for detailed debugging information.
@@ -45,6 +53,46 @@ extension LogLevelExtension on LogLevel {
         return "FATAL";
       case LogLevel.wtf:
         return "WTF";
+    }
+  }
+
+  /// Returns a color code for the log level.
+
+  String get color {
+    switch (this) {
+      case LogLevel.verbose:
+        return _ansiCyan;
+      case LogLevel.debug:
+        return _ansiGreen;
+      case LogLevel.info:
+        return _ansiWhite;
+      case LogLevel.warning:
+        return _ansiYellow;
+      case LogLevel.error:
+        return _ansiRed;
+      case LogLevel.fatal:
+        return _ansiMagenta;
+      case LogLevel.wtf:
+        return _ansiRed;
+    }
+  }
+
+  int get levelIndex {
+    switch (this) {
+      case LogLevel.verbose:
+        return 0;
+      case LogLevel.debug:
+        return 1000;
+      case LogLevel.info:
+        return 2000;
+      case LogLevel.warning:
+        return 3000;
+      case LogLevel.error:
+        return 4000;
+      case LogLevel.fatal:
+        return 5000;
+      case LogLevel.wtf:
+        return 6000;
     }
   }
 }
