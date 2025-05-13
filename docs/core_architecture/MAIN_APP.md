@@ -77,7 +77,7 @@ Additional benefits of Flutter include:
 - **Agile Development**: Adoption of agile methodologies for iterative development and feedback.
 - **Documentation Standards**: Adherence to documentation standards for consistency and clarity.
 - **Code Quality**: Use of linters and formatters to maintain code quality.
-```
+
 
 ## Architecture Components
 
