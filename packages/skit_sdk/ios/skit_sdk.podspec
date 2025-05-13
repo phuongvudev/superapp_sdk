@@ -3,7 +3,7 @@
 # Run `pod lib lint core.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'core'
+  s.name             = 'skit_sdk'
   s.version          = '0.0.1'
   s.summary          = 'A new Flutter project.'
   s.description      = <<-DESC

@@ -43,7 +43,7 @@ The `AuthenticationService` (`src/services/authentication/authentication_service
 
 ### 4. Mini-App Launcher
 
-The `MiniAppLauncher` (`src/services/mini_app/mini_app_launcher.dart`) is responsible for launching mini-apps based on their manifests.
+The `MiniAppKit` (`src/services/mini_app/mini_app_launcher.dart`) is responsible for launching mini-apps based on their manifests.
 
 ### 5. Event Bus
 

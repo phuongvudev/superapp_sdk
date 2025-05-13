@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:skit_sdk/src/app_shell/super_mini_app_container.dart';
 import 'package:skit_sdk/src/models/mini_app_manifest.dart';
@@ -47,15 +46,7 @@ class _SuperAppShellState extends State<SuperAppShell> {
       appBar: widget.appBar,
       body: Column(
         children: [
-          Expanded(
-            child: widget.miniAppContainer ??
-                SuperMiniAppContainer(
-                  isLoading: _isLoading,
-                  child: widget.child ?? const Center(
-                    child: Text('Welcome to your Super App'),
-                  ),
-                ),
-          ),
+          Expanded(child: widget.miniAppContainer ?? SizedBox.shrink()),
         ],
       ),
       bottomNavigationBar: widget.navigationBuilder != null

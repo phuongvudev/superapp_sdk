@@ -5,14 +5,23 @@
 This document outlines the navigation mechanisms between the Main App and Mini Apps, including the technical implementation, communication flow, and supported navigation patterns. The goal is to provide a comprehensive guide for developers to understand how to navigate to Mini Apps seamlessly, whether through deep links or programmatic calls.
 
 ## Why choose Deep Link Navigation?
-- Deep linking is a powerful mechanism that allows users to navigate directly to specific content within Mini Apps. It enhances user experience by enabling quick access to features without going through multiple screens in the Main App. This document will cover the deep link navigation process, including how to define deep links, handle parameters, and manage navigation errors.
-- Deep links are URIs that point to specific content within a Mini App. They can be used to launch Mini Apps directly from external sources, such as notifications, emails, or other apps. The deep link structure typically includes the Mini App ID and any necessary parameters.
-- Deep links can be defined in the Mini App manifest, allowing the Main App to recognize and handle them appropriately. The deep link dispatcher in the Main App captures incoming deep links and matches them against registered Mini App patterns.
-- The deep link dispatcher extracts parameters from the URI and passes them to the Mini App launcher, which is responsible for launching the Mini App with the provided parameters.
-- The Mini App launcher handles the actual navigation process, including loading the Mini App based on its framework type (Flutter, Web, Native) and managing any necessary data passing between the Main App and the Mini App.
-- The deep link navigation process is designed to be flexible and extensible, allowing developers to easily add new Mini Apps and define their deep link patterns. This modular approach enables the Main App to support a wide range of Mini Apps without requiring significant changes to the core navigation logic.
-- The deep link dispatcher and Mini App launcher work together to ensure a smooth navigation experience, handling any errors or exceptions that may occur during the process. This includes validating deep links, checking for required parameters, and providing fallback options in case of navigation failures.
-- The deep link navigation process is designed to be user-friendly and efficient, allowing users to quickly access Mini Apps without unnecessary delays or complications. By leveraging deep links, the Main App can provide a seamless experience for users, enabling them to interact with Mini Apps in a more intuitive and engaging way.
+
+### Seamless User Experience
+- Deep links allow users to navigate directly to specific content within Mini Apps without going through multiple screens
+- Enables quick access from external sources like notifications, emails, or other apps
+- Creates a more intuitive and engaging way for users to interact with Mini Apps
+
+### Technical Implementation
+- Deep links use URI schemes (e.g., `miniapp://shopping_cart/checkout?id=123`) that include Mini App ID and parameters
+- Mini App manifests define acceptable deep link patterns that the Main App can recognize
+- The deep link dispatcher captures incoming links and matches them against registered patterns
+- Parameters are extracted from URIs and passed to the Mini App launcher
+
+### Flexibility and Robustness
+- Supports various Mini App frameworks (Flutter, Web, Native) with framework-specific handling
+- Modular approach allows easy addition of new Mini Apps without changing core navigation logic
+- Includes built-in error handling, parameter validation, and fallback options
+- Can be extended with pre-loading capabilities for improved performance
 
 ## Key Features
 - **Deep Link Navigation**: Directly navigate to Mini Apps using URI schemes.
@@ -65,7 +74,7 @@ Deep linking provides a powerful way to navigate directly to Mini Apps using URI
 2. `DeepLinkDispatcher` captures the link via `AppLinks`
 3. The dispatcher matches the link against registered Mini App patterns
 4. Parameters are extracted from the URI
-5. `MiniAppLauncher` launches the appropriate Mini App with extracted parameters
+5. `MiniAppKit` launches the appropriate Mini App with extracted parameters
 
 ```dart
 // Example deep link structure
@@ -78,7 +87,7 @@ miniapp://<app_id>/<path>?param1=value1&param2=value2
 // Handling deep links in Main App
 void initializeDeepLinkHandling() {
   final deepLinkDispatcher = DeepLinkDispatcher(
-    miniAppLauncher: miniAppLauncher,
+    miniAppKit: miniAppKit,
   );
   
   // The dispatcher automatically registers for deep link events
@@ -88,11 +97,11 @@ void initializeDeepLinkHandling() {
 
 ### 2. Programmatic Navigation
 
-The Main App can directly navigate to Mini Apps through the `MiniAppLauncher`.
+The Main App can directly navigate to Mini Apps through the `MiniAppKit`.
 
 #### Implementation Flow
 
-1. Main App code calls `MiniAppLauncher.launch()` with Mini App ID
+1. Main App code calls `MiniAppKit.launch()` with Mini App ID
 2. Optional parameters are passed as a map
 3. The launcher looks up the Mini App manifest from the registry
 4. Based on the framework type, appropriate loading mechanism is used
@@ -103,7 +112,7 @@ The Main App can directly navigate to Mini Apps through the `MiniAppLauncher`.
 ```dart
 // Navigating to a Mini App programmatically
 Future<void> navigateToMiniApp(String appId, Map<String, dynamic> params) async {
-  final miniAppWidget = await miniAppLauncher.launch(appId, params: params);
+  final miniAppWidget = await miniAppKit.launch(appId, params: params);
   if (miniAppWidget != null) {
     // For Flutter-based Mini Apps that return a widget
     Navigator.push(context, MaterialPageRoute(builder: (context) => miniAppWidget));
@@ -151,7 +160,7 @@ void registerMiniApp() {
     deepLinks: ['cart://*', 'miniapp://shopping_cart/*'],
   );
   
-  miniAppLauncher.registerMiniApp(manifest);
+  miniAppKit.registerMiniApp(manifest);
 }
 ```
 
@@ -183,7 +192,7 @@ Map<String, dynamic> _extractDeepLinkParameters(Uri uri) {
 
 ```dart
 // Example of direct parameter passing
-miniAppLauncher.launch(
+miniAppKit.launch(
   'shopping_cart',
   params: {
     'productId': '12345',
@@ -211,7 +220,7 @@ The system includes robust error handling for navigation failures:
 
 ```dart
 try {
-  await miniAppLauncher.launch(appId, params: params);
+  await miniAppKit.launch(appId, params: params);
 } catch (e) {
   // Handle navigation errors with appropriate UI feedback
   showErrorDialog("Failed to open the requested feature");
@@ -225,8 +234,8 @@ For improved performance, Mini Apps can be preloaded before navigation:
 ```dart
 // Preload Mini Apps that might be needed soon
 Future<void> preloadFrequentlyUsedMiniApps() async {
-  await miniAppLauncher.preloadMiniApp('shopping_cart');
-  await miniAppLauncher.preloadMiniApp('payment');
+  await miniAppKit.preloadMiniApp('shopping_cart');
+  await miniAppKit.preloadMiniApp('payment');
 }
 ```
 

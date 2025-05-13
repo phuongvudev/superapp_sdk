@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:skit_sdk/src/models/mini_app_manifest.dart';
+part of 'mini_app_kit.dart';
 
 /// Abstract base class for managing mini app manifests.
 ///
@@ -42,7 +39,9 @@ final class FileMiniAppManifestRepository implements MiniAppManifestRepository {
     final file = File(filePath);
     final jsonString = await file.readAsString();
     final data = jsonDecode(jsonString) as Map<String, dynamic>;
-    return data.map((key, value) => MapEntry(key, MiniAppManifest.fromJson(value)));
+    return data.map(
+      (key, value) => MapEntry(key, MiniAppManifest.fromJson(value)),
+    );
   }
 
   /// Saves the mini app manifest registry to the JSON file.
@@ -51,7 +50,9 @@ final class FileMiniAppManifestRepository implements MiniAppManifestRepository {
   @override
   void saveRegistry(Map<String, MiniAppManifest> registry) {
     final file = File(filePath);
-    final jsonString = jsonEncode(registry.map((key, value) => MapEntry(key, value.toJson())));
+    final jsonString = jsonEncode(
+      registry.map((key, value) => MapEntry(key, value.toJson())),
+    );
     file.writeAsStringSync(jsonString);
   }
 }

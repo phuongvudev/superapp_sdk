@@ -1,0 +1,79 @@
+part of 'deep_link.dart';
+
+interface class DeepLinkHandler{
+  void onFallbackDeepLink(Uri uri) {
+
+    throw UnimplementedError(
+      'onFallbackDeepLink is not implemented. Please provide an implementation.',
+    );
+  }
+
+  void onMiniAppLink(MiniAppManifest appManifest) {
+    throw UnimplementedError(
+      'onMiniAppLink is not implemented. Please provide an implementation.',
+    );
+  }
+
+  MiniAppManifest? miniAppMatcher(Uri uri) {
+    throw UnimplementedError(
+      'miniAppMatcher is not implemented. Please provide an implementation.',
+    );
+  }
+
+  void onDeepLinkTrack(Uri uri) {
+   throw UnimplementedError(
+      'trackDeepLink is not implemented. Please provide an implementation.',
+    );
+  }
+}
+
+/// Default DeepLinkHandler implementation
+class DefaultDeepLinkHandler with LoggerMixin implements DeepLinkHandler {
+  final MiniAppKit miniApp;
+
+  DefaultDeepLinkHandler({required this.miniApp});
+
+  @override
+  void onFallbackDeepLink(Uri uri) {
+
+  }
+
+  @override
+  void onMiniAppLink(MiniAppManifest appManifest) {
+    logger.info('Mini app deep link received: ${appManifest.appId}');
+    try {
+      miniApp.launch(appManifest.appId, params: appManifest.params);
+    } catch (e, stackTrace) {
+      logger.error(
+        'Failed to launch mini app from deep link: ${appManifest.appId}',
+        e,
+        stackTrace,
+      );
+    }
+  }
+
+  @override
+  MiniAppManifest? miniAppMatcher(Uri uri) {
+    try {
+      // Find the mini app manifest that matches the deep link
+      final matchingManifest = miniApp.registeredMiniApps.firstWhere(
+        (manifest) =>
+            manifest.deepLinks?.any(
+              (deepLinkPattern) =>
+                  UrlPatternMatcher.isDeepLinkMatching(deepLinkPattern, uri),
+            ) ??
+            false,
+      );
+      return matchingManifest;
+    } catch (e) {
+      logger.error("Error matching mini app for deep link: $e", e);
+      return null;
+    }
+  }
+
+  @override
+  void onDeepLinkTrack(Uri uri) {
+    logger.info('Tracking deep link: $uri');
+    // Add default analytics tracking if needed
+  }
+}

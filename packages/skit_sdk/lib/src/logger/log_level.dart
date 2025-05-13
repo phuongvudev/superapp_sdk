@@ -1,3 +1,5 @@
+
+part of 'logger.dart';
 /// Enum representing different log levels for logging purposes.
 enum LogLevel {
   /// Verbose log level, used for detailed debugging information.

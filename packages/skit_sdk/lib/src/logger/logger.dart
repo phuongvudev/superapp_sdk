@@ -1,5 +1,15 @@
-import 'package:skit_sdk/src/logger/log_level.dart';
-import 'package:skit_sdk/src/logger/log_sink.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+
+part 'log_level.dart';
+
+part 'log_sink.dart';
+
+part 'logger_mixin.dart';
 
 /// Manages loggers and global log sinks for the application.
 class LogManager {
@@ -31,8 +41,11 @@ class LogManager {
   }
 
   /// Retrieves a logger by name or creates a new one if it doesn't exist.
-  Logger getLogger([String name = defaultLoggerName]) {
-    return _loggers.putIfAbsent(name, () => Logger(name, _globalLogSinks));
+  Logger getLogger([String name = defaultLoggerName, List<LogSink>? sinks]) {
+    return _loggers.putIfAbsent(
+      name,
+      () => Logger(name, sinks ?? _globalLogSinks),
+    );
   }
 }
 
@@ -50,8 +63,11 @@ class Logger {
   }
 
   /// Logs a message with the ERROR level, including optional error and stack trace.
-  void error(String message,
-      [dynamic error, StackTrace stackTrace = StackTrace.empty]) {
+  void error(
+    String message, [
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  ]) {
     _writeLog(LogLevel.error, message, error, stackTrace);
   }
 
@@ -71,14 +87,20 @@ class Logger {
   }
 
   /// Logs a message with the FATAL level, including optional error and stack trace.
-  void fatal(String message,
-      [dynamic error, StackTrace stackTrace = StackTrace.empty]) {
+  void fatal(
+    String message, [
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  ]) {
     _writeLog(LogLevel.fatal, message, error, stackTrace);
   }
 
   /// Logs a message with the WTF level, including optional error and stack trace.
-  void wtf(String message,
-      [dynamic error, StackTrace stackTrace = StackTrace.empty]) {
+  void wtf(
+    String message, [
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  ]) {
     _writeLog(LogLevel.wtf, message, error, stackTrace);
   }
 
@@ -88,8 +110,12 @@ class Logger {
   /// [message] - The log message.
   /// [error] - Optional error details.
   /// [stackTrace] - Optional stack trace details.
-  void _writeLog(LogLevel level, String message,
-      [dynamic error, StackTrace stackTrace = StackTrace.empty]) {
+  void _writeLog(
+    LogLevel level,
+    String message, [
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  ]) {
     if (level.index >= LogLevel.info.index) {
       for (var sink in _logSinks) {
         sink.log(level, message, error: error, stackTrace: stackTrace);

@@ -46,7 +46,7 @@ Mini Apps are modular, self-contained applications that integrate with the Main 
 ### 1. Core Structure
 
 ```
-// Example Mini App structure
+// Example Flutter Mini App structure
 mini_app/
 ├── lib/
 │   ├── main.dart            # Entry point

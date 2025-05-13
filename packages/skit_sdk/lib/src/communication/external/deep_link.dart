@@ -1,19 +1,38 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
-import 'package:skit_sdk/src/communication/external/deep_link_matcher.dart';
-import 'package:skit_sdk/src/logger/logger_mixin.dart';
+import 'package:skit_sdk/src/kit/kit.dart';
+import 'package:skit_sdk/src/logger/logger.dart';
 import 'package:skit_sdk/src/models/mini_app_manifest.dart';
-import 'package:skit_sdk/src/services/mini_app/mini_app_launcher.dart';
-import 'package:skit_sdk/src/constants/framework_type.dart';
+import 'package:skit_sdk/src/utils/url_pattern_matcher.dart';
 
-class DeepLinkDispatcher with LoggerMixin {
-  final MiniAppLauncher miniAppLauncher;
+part 'deep_link_handler.dart';
+
+typedef OnFallbackDeepLink = void Function(Uri uri);
+
+typedef MiniAppMatcher = MiniAppManifest? Function(Uri uri);
+
+typedef OnMiniAppLink = void Function(MiniAppManifest appManifest);
+
+typedef OnDeepLinkError = void Function(Object error);
+
+typedef OnDeepLinkTrack = void Function(Uri uri);
+
+class DeepLink with LoggerMixin {
+  final OnFallbackDeepLink? onFallbackDeepLink;
+  final MiniAppMatcher? miniAppMatcher;
+  final OnMiniAppLink? onMiniAppLink;
+  final OnDeepLinkError? onDeepLinkError;
+  final OnDeepLinkTrack? onDeepLinkTrack;
 
   StreamSubscription? _deepLinkSubscription;
   final _appLinks = AppLinks();
 
-  DeepLinkDispatcher({
-    required this.miniAppLauncher,
+  DeepLink({
+    required this.miniAppMatcher,
+    required this.onMiniAppLink,
+    this.onFallbackDeepLink,
+    this.onDeepLinkError,
+    this.onDeepLinkTrack,
   }) {
     _initializeDeepLinkHandling();
   }
@@ -25,6 +44,7 @@ class DeepLinkDispatcher with LoggerMixin {
       onError: (err) {
         // Handle any errors from the stream.
         logger.error("Error handling deep link stream: $err", err);
+        onDeepLinkError?.call(err);
       },
     );
 
@@ -42,45 +62,26 @@ class DeepLinkDispatcher with LoggerMixin {
     if (uri == null) {
       return;
     }
+    logger.info("Received deep link: $uri");
+    onDeepLinkTrack?.call(uri);
 
-    // Find the mini app manifest that matches the deep link.
-    final matchingManifest = miniAppLauncher.registeredMiniApps.firstWhere(
-      (manifest) =>
-          manifest.deepLinks?.any(
-            (deepLinkPattern) =>
-                DeepLinkMatcher.isDeepLinkMatching(deepLinkPattern, uri),
-          ) ??
-          false,
-      orElse: () => MiniAppManifest(
-        appId: '',
-        name: '',
-        framework: FrameworkType.unknown,
-        entryPath: '',
-      ), // Return a default manifest if no match is found.
-    );
+    var miniAppManifest = miniAppMatcher?.call(uri);
 
-    if (matchingManifest.appId.isEmpty) {
+    if (miniAppManifest != null) {
+      final deepLinkParameters = _extractDeepLinkParameters(uri);
+      miniAppManifest = miniAppManifest.copyWith(params: deepLinkParameters);
+      onMiniAppLink?.call(miniAppManifest);
+    } else {
       logger.info("No matching mini app found for deep link: $uri");
-      return;
+      onFallbackDeepLink?.call(uri);
     }
-
-    // Extract parameters from the deep link.
-    final deepLinkParameters = _extractDeepLinkParameters(uri);
-
-    // Launch the mini app associated with the deep link.
-    miniAppLauncher.launch(
-      matchingManifest.appId,
-      params: deepLinkParameters,
-    );
   }
 
   Map<String, dynamic> _extractDeepLinkParameters(Uri uri) {
     final parameters = <String, dynamic>{};
-    // Extract query parameters.
     uri.queryParameters.forEach((key, value) {
       parameters[key] = value;
     });
-    // You can add logic here to extract parameters from path segments if needed.
     return parameters;
   }
 

@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:skit_sdk/src/logger/log_level.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
+part of 'logger.dart';
 
 /// Abstract base class for log sinks.
 /// A log sink is responsible for handling log messages (e.g., writing to a file, sending to a server).
@@ -19,8 +15,12 @@ abstract class LogSink {
   /// [message] - The log message.
   /// [error] - Optional error details.
   /// [stackTrace] - Optional stack trace details.
-  Future<void> log(LogLevel level, String message,
-      {dynamic error, StackTrace stackTrace = StackTrace.empty});
+  Future<void> log(
+    LogLevel level,
+    String message, {
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  });
 }
 
 /// A log sink that writes log messages to a file.
@@ -47,22 +47,30 @@ class FileLogSink extends LogSink {
 
   /// Logs a message to the file.
   @override
-  Future<void> log(LogLevel level, String message,
-      {dynamic error, StackTrace stackTrace = StackTrace.empty}) async {
+  Future<void> log(
+    LogLevel level,
+    String message, {
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  }) async {
     try {
       final now = DateTime.now().toLocal().toString();
       final formattedMessage = """
 [$now] [$level] [$name]
 $message
 """;
-      await _logFile.writeAsString("$formattedMessage\n",
-          mode: FileMode.append);
+      await _logFile.writeAsString(
+        "$formattedMessage\n",
+        mode: FileMode.append,
+      );
       if (error != null) {
         await _logFile.writeAsString("Error: $error\n", mode: FileMode.append);
       }
       if (stackTrace != StackTrace.empty) {
-        await _logFile.writeAsString("StackTrace: $stackTrace\n",
-            mode: FileMode.append);
+        await _logFile.writeAsString(
+          "StackTrace: $stackTrace\n",
+          mode: FileMode.append,
+        );
       }
     } catch (e) {
       print("Cannot write to the log file: $e");
@@ -80,8 +88,12 @@ class ServerLogSink extends LogSink {
 
   /// Logs a message to the remote server.
   @override
-  Future<void> log(LogLevel level, String message,
-      {dynamic error, StackTrace stackTrace = StackTrace.empty}) async {
+  Future<void> log(
+    LogLevel level,
+    String message, {
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  }) async {
     try {
       final now = DateTime.now().toLocal().toString();
       final formattedMessage = "[$now] [$level] [$name] $message";
@@ -97,7 +109,8 @@ class ServerLogSink extends LogSink {
       );
       if (response.statusCode != 200 && response.statusCode != 201) {
         print(
-            'Failed to send log to server. Status code: ${response.statusCode}');
+          'Failed to send log to server. Status code: ${response.statusCode}',
+        );
       }
     } catch (e) {
       print('Failed to send log to server: $e');
@@ -112,22 +125,28 @@ class ConsoleLogSink extends LogSink {
 
   /// Logs a message to the console with color-coded log levels.
   @override
-  Future<void> log(LogLevel level, String message,
-      {dynamic error, StackTrace stackTrace = StackTrace.empty}) async {
-    final now = DateTime.now().toLocal().toString();
-    final levelColor = _getColorForLevel(level);
+  Future<void> log(
+    LogLevel level,
+    String message, {
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  }) async {
+    if (kDebugMode) {
+      final now = DateTime.now().toLocal().toString();
+      final levelColor = _getColorForLevel(level);
 
-    final formattedMessage = """
+      final formattedMessage = """
 $levelColor
 [$now] [$level] [$name]
 $message
 \u001b[0m"""; // Reset color
-    print(formattedMessage);
-    if (error != null) {
-      print("Error: $error");
-    }
-    if (stackTrace != StackTrace.empty) {
-      print("StackTrace: $stackTrace");
+      print(formattedMessage);
+      if (error != null) {
+        print("Error: $error");
+      }
+      if (stackTrace != StackTrace.empty) {
+        print("StackTrace: $stackTrace");
+      }
     }
   }
 
