@@ -15,12 +15,13 @@ Documentation covering the fundamental architecture of the main application and 
 
 Step-by-step guides for creating and integrating mini apps using different technologies.
 
-| File | Description | Link                                                                                 |
-|------|-------------|--------------------------------------------------------------------------------------|
+| File | Description | Link                                                                       |
+|------|-------------|----------------------------------------------------------------------------|
 | Flutter Mini App Guide | How to create, integrate, and launch Flutter mini apps | [View](docs/mini_app/HOW_TO_ADD_NEW_FLUTTER_MINI_APP.md) |
 | Web Mini App Guide | Instructions for integrating web-based mini apps | [View](docs/mini_app/HOW_TO_ADD_NEW_WEB_MINI_APP.md)       |
-| React Native Mini App Guide | How to add React Native mini apps to the main application | [View](mini_app/HOW_TO_ADD_NEW_REACT_NATIVE_MINI_APP.md) |
-
+| React Native Mini App Guide | How to add React Native mini apps to the main application | [View](mini_app_guides/HOW_TO_ADD_NEW_REACT_NATIVE_MINI_APP.md) |
+| iOS Mini App Guide | Instructions for integrating iOS native mini apps | [View](docs/mini_app/HOW_TO_ADD_NEW_IOS_MINI_APP.md)       |
+| Android Mini App Guide | Instructions for integrating Android native mini apps | [View](docs/mini_app/HOW_TO_ADD_NEW_ANDROID_MINI_APP.md)   |
 ## Communication Framework
 
 Details on the communication mechanisms between the main app and mini apps.
