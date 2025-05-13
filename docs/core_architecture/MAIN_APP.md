@@ -91,12 +91,23 @@ Additional benefits of Flutter include:
 
 ```
 main_app/
-├── core/              # Core functionality and shared services
-├── mini_app_host/     # Containers for mini app integration
-├── navigation/        # Navigation and routing system
-├── state_management/  # Global state management
-├── ui_components/     # Shared UI components
-└── services/          # App-wide services
+├── core/                # Core functionality and essential services
+│   ├── config/          # App-wide configurations
+│   ├── utils/           # Common utilities
+│   └── security/        # Security implementations
+├── mini_app_host/       # Containers for mini app integration
+│   ├── registry/        # Mini app registration and discovery
+│   └── runtime/         # Mini app execution environment
+├── navigation/          # Navigation and routing system
+├── state_management/    # Global state management
+├── ui_components/       # Shared UI components and design system
+├── services/            # App-wide services
+│   ├── analytics/       # Usage and performance tracking
+│   ├── networking/      # API and networking layer
+│   └── storage/         # Local and secure storage
+├── event_bus/           # Event communication system
+├── platform/            # Platform-specific implementations
+└── assets/              # Shared resources and assets
 ```
 
 ## Communication Architecture
