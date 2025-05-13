@@ -91,23 +91,33 @@ Additional benefits of Flutter include:
 
 ```
 main_app/
-├── core/                # Core functionality and essential services
-│   ├── config/          # App-wide configurations
-│   ├── utils/           # Common utilities
-│   └── security/        # Security implementations
-├── mini_app_host/       # Containers for mini app integration
-│   ├── registry/        # Mini app registration and discovery
-│   └── runtime/         # Mini app execution environment
-├── navigation/          # Navigation and routing system
-├── state_management/    # Global state management
-├── ui_components/       # Shared UI components and design system
-├── services/            # App-wide services
-│   ├── analytics/       # Usage and performance tracking
-│   ├── networking/      # API and networking layer
-│   └── storage/         # Local and secure storage
-├── event_bus/           # Event communication system
-├── platform/            # Platform-specific implementations
-└── assets/              # Shared resources and assets
+├── core/                      # Core functionality and essential services
+│   ├── config/                # App-wide configurations and initialization
+│   │   └── app_manager.dart   # SuperAppKit integration and management
+│   ├── utils/                 # Common utilities
+│   ├── logger/                # Logging infrastructure
+│   └── security/              # Security implementations
+├── communication/             # Communication mechanisms
+│   ├── deep_link_handler/     # Custom deep link handling
+│   └── event_bus/             # Event communication system
+├── mini_app/                  # Mini app infrastructure
+│   ├── registry/              # Mini app registration and discovery
+│   ├── manifests/             # Mini app manifest definitions
+│   ├── preloaders/            # Framework-specific mini app preloaders (Opional)
+│   └── runtime/               # Mini app execution environment (Opional)
+├── navigation/                # Navigation and routing system
+├── state_management/          # Global state management (Opional)
+├── ui_components/             # Shared UI components and design system (Opional)
+├── services/                  # App-wide services
+│   ├── analytics/             # Usage and performance tracking
+│   ├── networking/            # API and networking layer
+│   └── storage/               # Local and secure storage
+├── platform/                  # Platform-specific implementations (Opional)
+│   ├── android/               # Android-specific code
+│   └── ios/                   # iOS-specific code
+└── assets/                    # Shared resources and assets (Opional)
+    └── data/                  # Configuration data files
+        └── mini_app/          # Mini app registry and configuration
 ```
 
 ## Communication Architecture

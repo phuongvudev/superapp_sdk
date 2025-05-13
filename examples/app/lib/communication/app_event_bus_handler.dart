@@ -1,4 +1,4 @@
-import 'package:app/app/app_manager.dart';
+import 'package:app/core/config/app_manager.dart';
 import 'package:app/constants/event_bus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skit_sdk/kit.dart';

@@ -1,4 +1,3 @@
-import 'package:injectable/injectable.dart';
 import 'package:skit_sdk/kit.dart';
 
 final class AppDeepLinkHandler with LoggerMixin implements DeepLinkHandler {

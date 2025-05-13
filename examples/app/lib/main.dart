@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/core/loggers/logger.dart';
 import 'package:app/presentation/app.dart';
 import 'package:flutter/material.dart';
 
