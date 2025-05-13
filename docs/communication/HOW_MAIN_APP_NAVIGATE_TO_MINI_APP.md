@@ -49,7 +49,7 @@ The Main App navigation to Mini Apps is built on a flexible architecture that su
 │         │                                │
 │  ┌──────▼──────┐    ┌─────────────────┐  │
 │  │ DeepLink    │    │  MiniApp        │  │
-│  │ Dispatcher  │────┤  Launcher       │  │
+│  │             │────┤    Kit          │  │
 │  └─────────────┘    └────────┬────────┘  │
 └──────────────────────────────┬───────────┘
                                │
@@ -71,7 +71,7 @@ Deep linking provides a powerful way to navigate directly to Mini Apps using URI
 #### Implementation Flow
 
 1. User or system triggers a deep link (e.g., `miniapp://app_id?param=value`)
-2. `DeepLinkDispatcher` captures the link via `AppLinks`
+2. `DeepLink` captures the link via `AppLinks`
 3. The dispatcher matches the link against registered Mini App patterns
 4. Parameters are extracted from the URI
 5. `MiniAppKit` launches the appropriate Mini App with extracted parameters
@@ -86,7 +86,7 @@ miniapp://<app_id>/<path>?param1=value1&param2=value2
 ```dart
 // Handling deep links in Main App
 void initializeDeepLinkHandling() {
-  final deepLinkDispatcher = DeepLinkDispatcher(
+  final deepLink = DeepLink(
     miniAppKit: miniAppKit,
   );
   
