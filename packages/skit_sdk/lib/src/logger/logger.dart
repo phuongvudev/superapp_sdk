@@ -72,12 +72,18 @@ class Logger {
   }
 
   /// Logs a message with the WARNING level.
-  void warning(String message) {
+  void warning(String message, [
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  ]) {
     _writeLog(LogLevel.warning, message);
   }
 
   /// Logs a message with the DEBUG level.
-  void debug(String message) {
+  void debug(String message, [
+    dynamic error,
+    StackTrace stackTrace = StackTrace.empty,
+  ]) {
     _writeLog(LogLevel.debug, message);
   }
 

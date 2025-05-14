@@ -195,8 +195,7 @@ class MiniAppKitBuilder with LoggerMixin {
         platform: _platform,
         initialRegistry: loadedRegistry,
       );
-    } catch (error, stackTrace) {
-      logger.error('Failed to build MiniAppKit', error, stackTrace);
+    } catch (error) {
       rethrow;
     }
   }

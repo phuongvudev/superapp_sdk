@@ -1,4 +1,7 @@
 import 'package:app/communication/app_deep_link_handler.dart';
+import 'package:app/core/errors/app_error.dart';
+import 'package:app/core/exception/app_exception.dart';
+import 'package:app/mini_app/mini_app_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skit_sdk/kit.dart';
@@ -19,9 +22,7 @@ final class AppManager with LoggerMixin {
       // The registry path is where the mini app manifests are stored
       // This is a JSON file that contains the list of mini apps and their metadata
       final miniApp =
-          await MiniAppKit.builder()
-              .withRegistryPath('assets/data/mini_app/mini_apps.json')
-              .build();
+          await MiniAppKit.builder().withRegistry(MiniAppRepository()).build();
 
       // Create a custom deep link handler for better control
       // This handler will be responsible for handling deep links
@@ -33,17 +34,22 @@ final class AppManager with LoggerMixin {
       // The config parameter is a map that contains the configuration for the SDK
       _superAppKit =
           await SuperAppKit.builder()
-              .withEnvConfig( {})
+              .withEnvConfig({})
               .withMiniApp(miniApp)
               .withOptionalConfig(
-                    AppOptionalConfig(deepLinkHandler: customDeepLinkHandler),
+                AppOptionalConfig(deepLinkHandler: customDeepLinkHandler),
               )
               .build();
 
-      logger.info('App manager initialized successfully');
+      logger.info('$runtimeType initialized successfully');
     } catch (e, stackTrace) {
-      logger.error('Failed to initialize app manager', e, stackTrace);
-      rethrow;
+      throw AppException(
+        message: '$e',
+        source: '$runtimeType',
+        error: e,
+        severity: ErrorSeverity.critical,
+        stackTrace: stackTrace,
+      );
     }
   }
 

@@ -16,6 +16,9 @@ class MiniAppManifest {
   /// Display name of the mini app.
   final String name;
 
+  /// Mini app version.
+  final String version;
+
   /// Information about the mini app, such as its version or description.
   /// This is typically used for display purposes.
   /// This field is optional and can be null.
@@ -53,6 +56,7 @@ class MiniAppManifest {
   ///
   /// [appId] - The unique identifier for the mini app.
   /// [name] - The display name of the mini app.
+  /// [version] - The version of the mini app (default is '1.0.0').
   /// [framework] - The framework type used by the mini app.
   /// [entryPath] - The path to the entry point of the mini app.
   /// [mainComponent] - The optional name of the main component.
@@ -62,9 +66,11 @@ class MiniAppManifest {
   /// [appBuilder] - The optional builder function for creating the main widget.
   /// [description] - The optional description of the mini app.
   /// [appIcon] - The optional path to the app icon.
+
   MiniAppManifest({
     required this.appId,
     required this.name,
+    this.version = '1.0.0',
     required this.framework,
     required this.entryPath,
     this.mainComponent,
@@ -79,8 +85,9 @@ class MiniAppManifest {
         assert(entryPath.isNotEmpty, 'entryPath cannot be empty'),
         assert(
             framework != FrameworkType.unknown, 'framework cannot be unknown'),
-        assert(framework == FrameworkType.flutter && appBuilder == null,
-            'builder cannot be null when framework is Flutter');
+       assert(
+           framework != FrameworkType.flutter || appBuilder != null,
+           'appBuilder cannot be null when framework is Flutter. Current Framework: $framework');
 
   /// Converts the `MiniAppManifest` instance to a JSON-compatible map.
   ///
@@ -88,6 +95,7 @@ class MiniAppManifest {
   Map<String, dynamic> toJson() => {
         'id': appId,
         'name': name,
+        'version': version,
         'framework': framework.name,
         'entryPath': entryPath,
         'mainComponent': mainComponent,
@@ -96,6 +104,7 @@ class MiniAppManifest {
         'supportedEvents': supportedEvents,
         'description': description,
         'appIcon': appIcon,
+
       };
 
   /// Creates a `MiniAppManifest` instance from a JSON-compatible map.
@@ -106,6 +115,7 @@ class MiniAppManifest {
     return MiniAppManifest(
       appId: json['id'],
       name: json['name'],
+      version: json['version'] ?? '1.0.0',
       framework: FrameworkTypeX.fromString(json['framework']),
       entryPath: json['entryPath'],
       mainComponent: json['mainComponent'],
@@ -123,6 +133,7 @@ class MiniAppManifest {
   MiniAppManifest copyWith({
     String? appId,
     String? name,
+    String? version,
     FrameworkType? framework,
     String? entryPath,
     String? mainComponent,
@@ -136,6 +147,7 @@ class MiniAppManifest {
     return MiniAppManifest(
       appId: appId ?? this.appId,
       name: name ?? this.name,
+      version: version ?? this.version,
       framework: framework ?? this.framework,
       entryPath: entryPath ?? this.entryPath,
       mainComponent: mainComponent ?? this.mainComponent,
