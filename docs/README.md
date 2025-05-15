@@ -38,6 +38,8 @@ Details on the communication mechanisms between the main app and mini apps.
 Documentation on deployment methods and configuration management.
 
 ### Continuous Integration and Continuous Deployment (CI/CD) strategies.
+CI/CD strategies for different mini app types, including Flutter, web, React Native, iOS, and Android.
+
 | File | Description | Link | Status |
 |------|-------------|------------------------------------------------------------|--------|
 | CI/CD Guide | Overview of CI/CD strategies for mini app development | [View](deployment/ci_cd/HOW_TO_USE_CI_CD.md) | Completed |
@@ -48,6 +50,8 @@ Documentation on deployment methods and configuration management.
 | CI/CD for Android Mini App | CI/CD strategies specific to Android native mini apps | [View](deployment/ci_cd/HOW_TO_USE_CI_CD_ANDROID_MINI_APP.md) | Completed |
 
 ### Deployment strategies for different platforms.
+Deployment strategies for various platforms, including App Store, remote config, and bundle deployment.
+
 | File                     | Description | Link | Status    |
 |--------------------------|-------------|------------------------------------------------------------|-----------|
 | App Store Deployment     | Guide for deploying applications to the App Store | [View](deployment/store/APP_STORE_DEPLOYMENT.md) | Completed |
