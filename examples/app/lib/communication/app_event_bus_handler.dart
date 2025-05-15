@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app/core/config/app_manager.dart';
 import 'package:app/constants/event_bus.dart';
 import 'package:app/core/error_handling/app_error.dart';
@@ -5,13 +7,13 @@ import 'package:injectable/injectable.dart';
 import 'package:skit_sdk/kit.dart';
 
 @lazySingleton
-class AppEventBusHandler with LoggerMixin {
+class AppEventBusManager with LoggerMixin {
   final AppManager _appManager;
 
   /// Get access to the event bus
   EventBus get _eventBus => _appManager.superAppKit.eventBus;
 
-  AppEventBusHandler(this._appManager);
+  AppEventBusManager(this._appManager);
 
   @postConstruct
   void initialize() {
@@ -36,11 +38,17 @@ class AppEventBusHandler with LoggerMixin {
     logger.info('AppEventBusHandler initialized');
   }
 
-  void broadcastEvent(String eventName, Map<String, dynamic> data) {
-    logger.debug('Broadcasting event: $eventName');
+  /// Broadcasts an event to all mini apps
+  /// [eventName] is the name of the event to broadcast
+  /// [data] is the optional data to send with the event
+  void broadcastEvent(String eventName, {Map<String, dynamic> data = const {}}) {
+    logger.debug('Broadcasting event: $eventName with data: $data');
     _eventBus.dispatch(Event(eventName, data));
   }
 
+  /// Sends data to a specific mini app
+  /// [miniAppId] is the ID of the mini app to send data to
+  /// [data] is the data to send
   void sendDataToMiniApp(String miniAppId, Map<String, dynamic> data) {
     logger.debug('Sending data to mini app: $miniAppId');
     _eventBus.dispatch(
@@ -51,6 +59,10 @@ class AppEventBusHandler with LoggerMixin {
     );
   }
 
+  /// Handles the result from a mini app
+  /// [data] is the data received from the mini app
+  /// This method processes the result and can trigger further actions
+  /// based on the result
   void handleMiniAppResult(dynamic data) {
     try {
       // Process mini app results
@@ -69,6 +81,10 @@ class AppEventBusHandler with LoggerMixin {
     }
   }
 
+  /// Handles requests from mini apps
+  /// [data] is the request data received from the mini app
+  /// This method processes the request and can trigger further actions
+  /// based on the request type
   void handleMiniAppRequest(dynamic data) {
     try {
       // Handle various requests from mini apps
@@ -115,14 +131,21 @@ class AppEventBusHandler with LoggerMixin {
   }
 
   void notifyAppLifecycleChange(String state) {
-    broadcastEvent(EventNameConstants.appStateChanged, {'state': state});
+    broadcastEvent(EventNameConstants.appStateChanged, data: {'state': state});
   }
 
   void notifyAppForegrounded() {
-    broadcastEvent(EventNameConstants.appForegrounded, {});
+    broadcastEvent(EventNameConstants.appForegrounded, );
   }
 
   void notifyAppBackgrounded() {
-    broadcastEvent(EventNameConstants.appBackgrounded, {});
+    broadcastEvent(EventNameConstants.appBackgrounded,);
+  }
+
+  void notifyAppClosed() {
+    broadcastEvent(EventNameConstants.appClosed,);
+  }
+  void notifyAppStarted() {
+    broadcastEvent(EventNameConstants.appLaunched,);
   }
 }

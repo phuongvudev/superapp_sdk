@@ -1,3 +1,4 @@
+import 'package:app/communication/app_event_bus_handler.dart';
 import 'package:app/core/config/app_manager.dart';
 import 'package:app/di/di.config.dart';
 import 'package:get_it/get_it.dart';
@@ -11,3 +12,6 @@ Future<void> setupDependencyInjection() async {
 }
 
 AppManager get appManager => getIt<AppManager>();
+
+AppEventBusManager get appEventBus =>
+    getIt<AppEventBusManager>();

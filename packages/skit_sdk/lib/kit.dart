@@ -8,5 +8,5 @@ export 'src/logger/logger.dart';
 export 'src/models/app_config_optional.dart';
 export 'src/models/event.dart';
 export 'src/models/mini_app_manifest.dart';
-
+export 'src/app_shell/app_shell.dart';
 export 'src/utils/utils.dart';

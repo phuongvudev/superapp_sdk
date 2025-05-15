@@ -1,5 +1,6 @@
 import 'package:app/di/di.dart';
 import 'package:flutter/material.dart';
+import 'package:skit_sdk/kit.dart';
 
 class MyApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -10,20 +11,39 @@ class MyApp extends StatelessWidget {
     required this.navigatorKey,
     required this.scaffoldMessengerKey,
   });
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      navigatorKey: navigatorKey,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+    return SuperAppShell(
+      onAppStarted: () {
+        appEventBus.notifyAppStarted();
+      },
+      onAppForegrounded: () {
+        // Handle app foregrounded
+        appEventBus.notifyAppForegrounded();
+      },
+      onAppBackgrounded: () {
+        // Handle app backgrounded
+        appEventBus.notifyAppBackgrounded();
+      },
+      onAppClosed: () {
+        // Handle app closed
+        appEventBus.notifyAppClosed();
+      },
+      onChangeAppLifecycleState: (state) {
+        // Handle app lifecycle state changes
+        appEventBus.notifyAppLifecycleChange(state.name);
+      },
+      child: MaterialApp(
+        title: 'Super App Demo',
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(title: 'Super App Listing Page'),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

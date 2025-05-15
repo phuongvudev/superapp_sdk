@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:developer' as developer;
+
 part 'log_level.dart';
 
 part 'log_sink.dart';
@@ -72,7 +73,8 @@ class Logger {
   }
 
   /// Logs a message with the WARNING level.
-  void warning(String message, [
+  void warning(
+    String message, [
     dynamic error,
     StackTrace stackTrace = StackTrace.empty,
   ]) {
@@ -80,7 +82,8 @@ class Logger {
   }
 
   /// Logs a message with the DEBUG level.
-  void debug(String message, [
+  void debug(
+    String message, [
     dynamic error,
     StackTrace stackTrace = StackTrace.empty,
   ]) {
@@ -122,10 +125,8 @@ class Logger {
     dynamic error,
     StackTrace stackTrace = StackTrace.empty,
   ]) {
-    if (level.index >= LogLevel.info.index) {
-      for (var sink in _logSinks) {
-        sink.log(level, message, error: error, stackTrace: stackTrace);
-      }
+    for (var sink in _logSinks) {
+      sink.log(level, message, error: error, stackTrace: stackTrace);
     }
   }
 }

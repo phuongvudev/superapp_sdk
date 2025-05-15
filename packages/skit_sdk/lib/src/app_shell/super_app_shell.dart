@@ -1,81 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:skit_sdk/src/app_shell/super_mini_app_container.dart';
-import 'package:skit_sdk/src/models/mini_app_manifest.dart';
+
+typedef OnAppStarted = void Function();
+typedef OnAppForegrounded = void Function();
+typedef OnAppBackgrounded = void Function();
+typedef OnAppClosed = void Function();
+typedef OnAppLifecycleStateChanged = void Function(AppLifecycleState state);
 
 /// Main shell for the Super App that provides structure and navigation
 class SuperAppShell extends StatefulWidget {
-  /// AppBar to display at the top of the shell
-  final PreferredSizeWidget? appBar;
-
-  /// Function to build the navigation component
-  final Widget Function(BuildContext context)? navigationBuilder;
-
-  /// Container for displaying mini apps
-  final SuperMiniAppContainer? miniAppContainer;
-
-  /// Callback when a mini app is successfully loaded
-  final Function(MiniAppManifest miniApp)? onMiniAppLoaded;
-
-  /// Callback when there's an error loading a mini app
-  final Function(MiniAppManifest miniApp, dynamic error)? onMiniAppError;
-
   /// Child widget to display in the shell
-  final Widget? child;
+  final Widget child;
+
+  /// Callback for when the app is started
+  /// This is called when the app is launched
+  final OnAppStarted? onAppStarted;
+
+  /// Callback for when the app is foregrounded
+  /// This is called when the app comes to the foreground
+  final OnAppForegrounded? onAppForegrounded;
+
+  /// Callback for when the app is backgrounded
+  /// This is called when the app goes to the background
+  final OnAppBackgrounded? onAppBackgrounded;
+
+  /// Callback for when the app is closed
+  /// This is called when the app is closed
+  final OnAppClosed? onAppClosed;
+
+  /// Callback for when the app lifecycle state changes
+  /// This is called when the app lifecycle state changes
+  final OnAppLifecycleStateChanged? onChangeAppLifecycleState;
 
   const SuperAppShell({
     super.key,
-    this.appBar,
-    this.navigationBuilder,
-    this.miniAppContainer,
-    this.onMiniAppLoaded,
-    this.onMiniAppError,
-    this.child,
+    required this.child,
+    this.onChangeAppLifecycleState,
+    this.onAppStarted,
+    this.onAppForegrounded,
+    this.onAppBackgrounded,
+    this.onAppClosed,
   });
 
   @override
   State<SuperAppShell> createState() => _SuperAppShellState();
+
+  static SuperAppShell of(BuildContext context) {
+    final superAppShell =
+        context.findAncestorWidgetOfExactType<SuperAppShell>();
+    assert(superAppShell != null, 'No SuperAppShell found in context');
+    return superAppShell!;
+  }
 }
 
-class _SuperAppShellState extends State<SuperAppShell> {
-  MiniAppManifest? _currentMiniApp;
-  bool _isLoading = false;
+class _SuperAppShellState extends State<SuperAppShell>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // Notify app launched
+    widget.onAppStarted?.call();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    // Notify app closed
+    widget.onAppClosed?.call();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Notify about lifecycle changes
+    widget.onChangeAppLifecycleState?.call(state);
+    // Handle specific states
+    if (state == AppLifecycleState.resumed) {
+      widget.onAppForegrounded?.call();
+    } else if (state == AppLifecycleState.paused) {
+      widget.onAppBackgrounded?.call();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: widget.appBar,
-      body: Column(
-        children: [
-          Expanded(child: widget.miniAppContainer ?? SizedBox.shrink()),
-        ],
-      ),
-      bottomNavigationBar: widget.navigationBuilder != null
-          ? widget.navigationBuilder!(context)
-          : null,
-    );
-  }
-
-  void _loadMiniApp(MiniAppManifest miniApp) {
-    setState(() {
-      _isLoading = true;
-      _currentMiniApp = miniApp;
-    });
-
-    // Simulate loading of mini app
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        widget.onMiniAppLoaded?.call(miniApp);
-      }
-    });
-  }
-
-  void _handleMiniAppError(MiniAppManifest miniApp, dynamic error) {
-    setState(() {
-      _isLoading = false;
-    });
-    widget.onMiniAppError?.call(miniApp, error);
+    return widget.child;
   }
 }
