@@ -10,11 +10,17 @@ mixin LoggerMixin {
 
   /// A logger instance for the class that uses this mixin.
   Logger get logger {
-    final name = runtimeType.toString();
-    return LogManager().getLogger(name, [ConsoleLogSink(name)]);
+    return LogManager().getLogger(source, [ConsoleLogSink(source)]);
   }
 
+  /// A logger instance for the class that uses this mixin with a custom name.
+  ///
   Logger loggerWithOutput(String name, {List<LogSink>? sinks}) {
     return LogManager().getLogger(name, sinks);
+  }
+
+  /// Gets the current source of the logger.
+  String get source {
+    return runtimeType.toString();
   }
 }

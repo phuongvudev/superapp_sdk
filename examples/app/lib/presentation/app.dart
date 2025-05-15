@@ -1,6 +1,3 @@
-import 'package:app/core/errors/app_error.dart';
-import 'package:app/core/exception/app_exception.dart';
-import 'package:app/core/exception/global_exception_handler.dart';
 import 'package:app/di/di.dart';
 import 'package:flutter/material.dart';
 

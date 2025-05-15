@@ -96,6 +96,7 @@ main_app/
 │   │   └── app_manager.dart   # SuperAppKit integration and management
 │   ├── utils/                 # Common utilities
 │   ├── logger/                # Logging infrastructure
+│   ├── error_handling/        # Error/exception handling
 │   └── security/              # Security implementations
 ├── communication/             # Communication mechanisms
 │   ├── deep_link_handler/     # Custom deep link handling

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:app/core/errors/global_error_handler.dart';
-import 'package:app/core/exception/global_exception_handler.dart';
+import 'package:app/core/error_handling/app_error_manager.dart';
+
 import 'package:app/core/loggers/logger.dart';
 import 'package:app/navigation/app_navigation.dart';
 import 'package:app/presentation/app.dart';
@@ -12,10 +12,9 @@ import 'di/di.dart';
 void main() {
   // Initialize the logger
   AppLogger().initLogger();
-  // Initialize the global error handler
-  GlobalErrorHandler().initialize();
-  // Initialize the global exception handler
-  GlobalExceptionHandler().initialize(
+
+  // Initialize the global app error manager
+  AppErrorManager().initialize(
     navigatorKey: AppNavigation.navigatorKey,
     scaffoldMessengerKey: AppNavigation.scaffoldMessengerKey,
   );
@@ -36,5 +35,5 @@ void main() {
 
 void onError(Object? error, StackTrace stackTrace) {
   // Handle other types of errors
-  GlobalErrorHandler().handleError(error, stackTrace, 'ZoneError');
+  AppErrorManager().handleError(error, stackTrace, 'ZoneError');
 }

@@ -1,5 +1,6 @@
 import 'package:app/core/config/app_manager.dart';
 import 'package:app/constants/event_bus.dart';
+import 'package:app/core/error_handling/app_error.dart';
 import 'package:injectable/injectable.dart';
 import 'package:skit_sdk/kit.dart';
 
@@ -59,7 +60,12 @@ class AppEventBusHandler with LoggerMixin {
 
       // Additional processing logic can be added here
     } catch (e, stackTrace) {
-      logger.error('Error handling mini app result', e, stackTrace);
+      throw AppError(
+        message: 'Error handling mini app result: $data',
+        error: e,
+        source: source,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -90,7 +96,12 @@ class AppEventBusHandler with LoggerMixin {
           logger.warning('Unknown request type from mini app: $requestType');
       }
     } catch (e, stackTrace) {
-      logger.error('Error handling mini app request', e, stackTrace);
+      throw AppError(
+        message: 'Error handling mini app request: $data',
+        error: e,
+        source: source,
+        stackTrace: stackTrace,
+      );
     }
   }
 

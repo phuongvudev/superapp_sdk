@@ -120,8 +120,10 @@ class ServerLogSink extends LogSink {
 
 /// A log sink that writes log messages to the console.
 class ConsoleLogSink extends LogSink {
+  final bool enableDebugMode;
+
   /// Constructor for initializing the console log sink with a name.
-  ConsoleLogSink(super.name);
+  ConsoleLogSink(super.name, {this.enableDebugMode = true});
 
   /// Logs a message to the console with color-coded log levels.
   @override
@@ -131,7 +133,7 @@ class ConsoleLogSink extends LogSink {
     dynamic error,
     StackTrace stackTrace = StackTrace.empty,
   }) async {
-    if (kDebugMode) {
+    if (enableDebugMode) {
       final now = DateTime.now().toLocal().toString();
       final levelColor = level.color;
 

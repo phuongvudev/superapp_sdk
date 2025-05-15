@@ -1,6 +1,5 @@
 import 'package:app/communication/app_deep_link_handler.dart';
-import 'package:app/core/errors/app_error.dart';
-import 'package:app/core/exception/app_exception.dart';
+import 'package:app/core/error_handling/app_error.dart';
 import 'package:app/mini_app/mini_app_repository.dart';
 import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';

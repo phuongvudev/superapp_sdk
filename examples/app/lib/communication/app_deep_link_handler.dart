@@ -1,3 +1,4 @@
+import 'package:app/core/error_handling/app_error.dart';
 import 'package:skit_sdk/kit.dart';
 
 final class AppDeepLinkHandler with LoggerMixin implements DeepLinkHandler {
@@ -16,11 +17,14 @@ final class AppDeepLinkHandler with LoggerMixin implements DeepLinkHandler {
     logger.info('Mini app deep link received: ${appManifest.appId}');
     try {
       miniApp.launch(appManifest.appId, params: appManifest.params);
+      logger.info('Launching mini app from deep link: ${appManifest.appId}');
     } catch (e, stackTrace) {
-      logger.error(
-        'Failed to launch mini app from deep link: ${appManifest.appId}',
-        e,
-        stackTrace,
+      throw AppError(
+        message:
+            'Failed to launch mini app ${appManifest.appId} from deep link',
+        error: e,
+        source: source,
+        stackTrace: stackTrace,
       );
     }
   }
@@ -37,17 +41,21 @@ final class AppDeepLinkHandler with LoggerMixin implements DeepLinkHandler {
             ) ??
             false,
       );
-
+      logger.info('Matching mini app found: ${matchingManifest.appId}');
+      // If a matching manifest is found, return it
       return matchingManifest;
-    } catch (e) {
-      logger.error("Error matching mini app for deep link: $e", e);
-      return null;
+    } catch (e, stackTrace) {
+      throw AppError(
+        message: 'Failed to match mini app for deep link: $uri',
+        source: source,
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
   }
 
   @override
   void onDeepLinkTrack(Uri uri) {
-    // TODO: implement trackDeepLink
+    logger.info('Deep link track received: $uri');
   }
-
 }
