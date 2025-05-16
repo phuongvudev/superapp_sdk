@@ -54,8 +54,8 @@ Deployment strategies for various platforms, including App Store, remote config,
 
 | File                     | Description | Link | Status    |
 |--------------------------|-------------|------------------------------------------------------------|-----------|
-| App Store Deployment     | Guide for deploying applications to the App Store | [View](deployment/store/APP_STORE_DEPLOYMENT.md) | Completed |
-| Remote Config Deployment | Using remote config or self-hosted servers for dynamic app configuration | [View](deployment/manage/REMOTE_CONFIG_DEPLOYMENT.md) | Completed |
+| App Store Deployment     | Guide for deploying applications to the App Store | [View](deployment/store/HOW_TO_DEPLOY_TO_APP_STORE) | Completed |
+| Remote Config Deployment | Using remote config or self-hosted servers for dynamic app configuration | [View](deployment/manage/HOW_TO_SETUP_REMOTE_CONFIG) | Completed |
 | Bundle Deployment        | Guide for deploying applications as bundles | [View](deployment/bundle/BUNDLE_DEPLOYMENT.md) | In Progress |
 | Code Push Deployment     | Guide for deploying applications using code push | [View](deployment/code_push/CODE_PUSH_DEPLOYMENT.md) | In Progress |
 
