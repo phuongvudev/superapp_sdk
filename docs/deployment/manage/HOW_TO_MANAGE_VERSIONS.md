@@ -1,6 +1,9 @@
 # Version Management Guide
 
 This document outlines the best practices and strategies for managing versions in both the main app and mini apps.
+It serves as a comprehensive guide to ensure consistent versioning, compatibility, and release management across the entire application ecosystem.
+It is intended for developers, project managers, and anyone involved in the deployment and maintenance of the application.
+It includes guidelines for versioning, release notes, backward compatibility, and tools to automate the process.
 
 ---
 
