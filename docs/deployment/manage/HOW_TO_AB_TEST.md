@@ -33,18 +33,15 @@ A/B testing is a method of comparing two or more variations of a feature or user
 
 1. **Set Up Flags**: Use a feature flagging system to toggle between the control and variant.
 2. **Example (Firebase Remote Config)**:
-   ```kotlin
-   val remoteConfig = FirebaseRemoteConfig.getInstance()
-   remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-       if (task.isSuccessful) {
-           val isVariantEnabled = remoteConfig.getBoolean("enable_variant")
-           if (isVariantEnabled) {
-               // Show Variant B
-           } else {
-               // Show Control A
-           }
-       }
-   }
+   ```dart
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      await remoteConfig.fetchAndActivate();
+      final isVariantEnabled = remoteConfig.getBool('enable_variant');
+      if (isVariantEnabled) {
+        // Show Variant B
+      } else {
+        // Show Control A
+      }
    ```
 
 ---
@@ -60,10 +57,13 @@ A/B testing is a method of comparing two or more variations of a feature or user
 
 1. **Track Metrics**: Use analytics tools to track user interactions and measure KPIs.
 2. **Example (Firebase Analytics)**:
-   ```kotlin
-   val bundle = Bundle()
-   bundle.putString("experiment_group", "variant_b")
-   FirebaseAnalytics.getInstance(context).logEvent("button_click", bundle)
+   ```dart
+   FirebaseAnalytics.instance.logEvent(
+     name: 'button_click',
+     parameters: {
+       'experiment_group': 'variant_b',
+     },
+   );
    ```
 
 3. **Analyze Results**:
