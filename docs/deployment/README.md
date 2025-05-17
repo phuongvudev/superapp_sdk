@@ -4,7 +4,7 @@ This document provides a summary and categorization of all deployment-related do
 This includes information on building, CI/CD pipelines, management of deployment configurations, and store deployment. All documentation is purpose for reference only.
 ---
 
-## [Building](deployment/building/README.md)
+## [Building](building/README.md)
 
 Documentation for building the project, including bundling and code push.
 
@@ -17,7 +17,7 @@ Documentation for building the project, including bundling and code push.
 | iOS Native In App Update Guide | Guide for iOS native in-app updates | [View](build/IOS_NATIVE_IN_APP_UPDATE.md) | To Do |
 ---
 
-## [CI/CD Pipelines](deployment/ci_cd/README.md)
+## [CI/CD Pipelines](ci_cd/README.md)
 
 Documentation for Continuous Integration and Continuous Deployment (CI/CD) pipelines.
 
@@ -27,7 +27,7 @@ Documentation for Continuous Integration and Continuous Deployment (CI/CD) pipel
 
 ---
 
-## [Management](deployment/manage/README.md)
+## [Management](manage/README.md)
 
 Documentation for managing deployment configurations, including A/B testing, remote config, and version management.
 
@@ -39,7 +39,7 @@ Documentation for managing deployment configurations, including A/B testing, rem
 
 ---
 
-## [Store Deployment](deployment/store/README.md)
+## [Store Deployment](store/README.md)
 
 Documentation for deploying the project to app stores.
 
