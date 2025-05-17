@@ -8,11 +8,13 @@ This includes information on building, CI/CD pipelines, management of deployment
 
 Documentation for building the project, including bundling and code push.
 
-| File | Description | Link                                                               | Status |
-|------|-------------|--------------------------------------------------------------------|--------|
-| Bundling Guide | Guide for bundling the application | [View](build/BUNDLE_DEPLOYMENT.md)                                 | To Do |
-| CodePush Guide | Guide for using CodePush for updates | [View](build/CODEPUSH_DEPLOYMENT.md)[View](HOW_TO_USE_CODEPUSH.md) | To Do |
-
+| File                   | Description | Link                                        | Status |
+|------------------------|-------------|---------------------------------------------|--------|
+| Bundling Guide         | Guide for bundling the application | [View](build/BUNDLE_DEPLOYMENT.md)          | To Do |
+| Flutter CodePush Guide | Guide for using CodePush for updates | [View](build/FLUTER_CODEPUSH_DEPLOYMENT.md) | To Do |
+| React Native CodePush Guide | Guide for using CodePush for React Native | [View](build/REACT_NATIVE_CODEPUSH_DEPLOYMENT.md) | To Do |
+| Android Native In App Update Guide | Guide for Android native in-app updates | [View](build/ANDROID_NATIVE_IN_APP_UPDATE.md) | To Do |
+| iOS Native In App Update Guide | Guide for iOS native in-app updates | [View](build/IOS_NATIVE_IN_APP_UPDATE.md) | To Do |
 ---
 
 ## [CI/CD Pipelines](deployment/ci_cd/README.md)
