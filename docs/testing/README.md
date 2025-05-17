@@ -81,7 +81,7 @@ Documentation for end-to-end testing practices.
 
 | File | Description | Link | Status |
 |------|-------------|------|--------|
-| End-to-End Testing Guide | Guide for end-to-end testing mini apps | [View](HOW_TO_END_TO_END_TEST_MINI_APP.md) | To Do |
+| End-to-End Testing Guide | Guide for end-to-end testing mini apps | [View](HOW_TO_END_TO_END_TEST_MINI_APP.md) | Completed |
 
 ---
 
@@ -109,9 +109,9 @@ Documentation for smoke testing practices.
 
 Documentation for acceptance testing practices.
 
-| File | Description | Link | Status |
-|------|-------------|------|--------|
-| Acceptance Testing Guide | Guide for acceptance testing mini apps | [View](HOW_TO_ACCEPTANCE_TEST_MINI_APP.md) | To Do |
+| File | Description | Link | Status     |
+|------|-------------|------|------------|
+| Acceptance Testing Guide | Guide for acceptance testing mini apps | [View](HOW_TO_ACCEPTANCE_TEST_MINI_APP.md) | Completed  |
 
 ---
 
@@ -121,7 +121,7 @@ Documentation for exploratory testing practices.
 
 | File | Description | Link | Status |
 |------|-------------|------|--------|
-| Exploratory Testing Guide | Guide for exploratory testing mini apps | [View](HOW_TO_EXPLORATORY_TEST_MINI_APP.md) | To Do |
+| Exploratory Testing Guide | Guide for exploratory testing mini apps | [View](HOW_TO_EXPLORATORY_TEST_MINI_APP.md) | Completed |
 
 ---
 
