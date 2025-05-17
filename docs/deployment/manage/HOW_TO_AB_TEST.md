@@ -93,10 +93,15 @@ A/B testing is a method of comparing two or more variations of a feature or user
 
 
 ## Best Practices
-
-1. Test one variable at a time to isolate its impact.
-2. Ensure the sample size is large enough for statistical significance.
-3. Avoid bias by randomly assigning users to groups.
-4. Monitor the experiment to ensure no adverse effects on user experience.
+1. **Test One Variable at a Time**: Focus on a single change to isolate its impact on user behavior.
+2. **Define Clear Objectives**: Set specific goals and hypotheses for the test.
+3. **Ensure Statistical Significance**: Use a large enough sample size to draw reliable conclusions.
+4. **Randomly Assign Users**: Avoid bias by randomly dividing users into control and variant groups.
+5. **Monitor User Experience**: Ensure the test does not negatively affect the overall user experience.
+6. **Gradual Rollout**: Start with a small audience and gradually increase the test group size.
+7. **Track Key Metrics**: Use analytics tools to measure relevant KPIs (e.g., conversion rate, engagement).
+8. **Avoid Overlapping Tests**: Run tests independently to prevent interference between experiments.
+9. **Document Results**: Record findings and insights for future reference.
+10. **Iterate and Refine**: Use results to improve and conduct follow-up tests if needed.
 
 This guide provides a framework for implementing A/B testing. Customize it based on your project's requirements.
